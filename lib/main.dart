@@ -17,9 +17,7 @@ import 'screen/ADMIN_/adminController.dart';
 // void requestPermission() async {
 //   var status = await Permission.storage.status;
 //   // var statusbl= await Permission.bluetooth.status;
-
 //   var status1 = await Permission.manageExternalStorage.status;
-
 //   if (!status1.isGranted) {
 //     await Permission.storage.request();
 //   }
@@ -54,6 +52,7 @@ void requestPermission() async {
   } else if (status.isPermanentlyDenied) {
     await Permission.manageExternalStorage.request();
   }
+
   // if (!status1.isGranted) {
   //   var status = await Permission.manageExternalStorage.request();
   //   if (status.isGranted) {
@@ -65,6 +64,46 @@ void requestPermission() async {
   //     await Permission.manageExternalStorage.request();
   //   }
   // }
+}
+
+void requestLocationPermission() async {
+  var status = await Permission.locationWhenInUse.status;
+  if (!status.isGranted) {
+    var status = await Permission.locationWhenInUse.request();
+    if (status.isGranted) {
+      var status = await Permission.locationAlways.request();
+      if (status.isGranted) {
+        //Do some stuff
+      } else {
+        //Do another stuff
+      }
+    } else {
+      //The user deny the permission
+    }
+    if (status.isPermanentlyDenied) {
+      //When the user previously rejected the permission and select never ask again
+      //Open the screen of settings
+      bool res = await openAppSettings();
+    }
+  } 
+  else 
+  {
+    //In use is available, check the always in use
+    var status = await Permission.locationAlways.status;
+    if (!status.isGranted) 
+    {
+      var status = await Permission.locationAlways.request();
+      if (status.isGranted) {
+        //Do some stuff
+      } 
+      else 
+      {
+        //Do another stuff
+      }
+    } else {
+      //previously available, do some stuff or nothing
+    }
+  }
 }
 
 void configLoading() {
@@ -126,8 +165,9 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? cid = prefs.getString("company_id");
   var status = await Permission.storage.status;
-//  permission();
+  // permission();
   requestPermission();
+  // requestLocationPermission();
   // checkPerm();
   runApp(MultiProvider(
     providers: [

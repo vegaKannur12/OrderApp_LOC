@@ -17,8 +17,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class MainDashboard extends StatefulWidget {
   String logtime;
+  String curAdr;
   BuildContext context;
-  MainDashboard({Key? key, required this.context, required this.logtime})
+  MainDashboard({Key? key, required this.context, required this.logtime, required this.curAdr})
       : super(key: key);
 
   @override
@@ -91,17 +92,17 @@ class _MainDashboardState extends State<MainDashboard> {
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [
-        IconButton(
-          onPressed: () async {
-            List<Map<String, dynamic>> list =
-                await OrderAppDB.instance.getListOfTables();
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TableList(list: list)),
-            );
-          },
-          icon: Icon(Icons.table_bar),
-        ),
+        // IconButton(
+        //   onPressed: () async {
+        //     List<Map<String, dynamic>> list =
+        //         await OrderAppDB.instance.getListOfTables();
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => TableList(list: list)),
+        //     );
+        //   },
+        //   icon: Icon(Icons.table_bar),
+        // ),
         Consumer<Controller>(
           builder: (context, value, child) {
             if (value.isLoading) {
@@ -180,6 +181,7 @@ class _MainDashboardState extends State<MainDashboard> {
                                   ),
                                 ],
                               ),
+
                               //  Row(children: [
                               //     CircleAvatar(
                               //     backgroundColor: Colors.black,
@@ -193,6 +195,9 @@ class _MainDashboardState extends State<MainDashboard> {
                             ],
                           ),
                         ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [value.pl]),
                         Row(
                           children: [
                             IconButton(

@@ -81,7 +81,9 @@ class _SplashScreenState extends State<SplashScreen>
                       } else {
                         return StaffLogin();
                       }
-                    } else {
+                    } 
+                    else 
+                    {
                       if (os != null && os!.isNotEmpty) {
                         Provider.of<Controller>(context, listen: false)
                             .getCompanyData(context);

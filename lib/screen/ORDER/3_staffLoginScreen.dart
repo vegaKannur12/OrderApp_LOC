@@ -299,7 +299,7 @@ class StaffLogin extends StatelessWidget {
                                                         .areaidFrompopup = null;
                                                     prefs.setBool(
                                                         "staffLog", true);
-                                                  Provider.of<Controller>(context, listen: false).determinePosition(context,"LoginPunch");
+                                                 await Provider.of<Controller>(context, listen: false).determinePosition(context,"LoginPunch");
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(

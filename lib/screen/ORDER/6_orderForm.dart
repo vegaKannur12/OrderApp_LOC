@@ -142,7 +142,7 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     double topInsets = MediaQuery.of(context).viewInsets.top;
-
+    bool _isButtonEnabled = true;
     print("widget.areaname---${widget.areaname}");
 
     // final bottom = MediaQuery.of(context).viewInsets.bottom;
@@ -1330,6 +1330,52 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                               );
                                                             }
                                                           },
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                P_Settings
+                                                                    .wavecolor,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        ElevatedButton.icon(
+                                                          icon: const Icon(
+                                                            Icons.location_on,
+                                                            color: Colors.white,
+                                                            size: 15.0,
+                                                          ),
+                                                          label: const Text(
+                                                            "Mark",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 14),
+                                                          ),
+                                                          onPressed:
+                                                              _isButtonEnabled
+                                                                  ? () {
+                                                                      // Disable the button after it's clicked
+                                                                      setState(
+                                                                          () {
+                                                                        _isButtonEnabled =
+                                                                            false;
+                                                                      });
+                                                                      // Call the provided onPressed callback
+                                                                      print("clicked once..");
+                                                                      // widget
+                                                                      //     .onPressed
+                                                                      //     ?.call();
+                                                                    }
+                                                                  : null,
                                                           style: ElevatedButton
                                                               .styleFrom(
                                                             backgroundColor:

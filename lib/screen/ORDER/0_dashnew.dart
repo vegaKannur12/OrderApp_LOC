@@ -79,6 +79,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   Timer? timer;
   String? logtime;
+  String? cAdr;
 
   _onSelectItem(int index, String? menu) {
     if (!mounted) return;
@@ -144,7 +145,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       print("Selected Index: " + _tabController!.index.toString());
     });
 
-    timer = Timer.periodic(Duration(minutes: 1), (Timer t) {
+    timer = Timer.periodic(Duration(minutes: 5), (Timer t) {
       print("Periodic Location------");
 
       Provider.of<Controller>(context, listen: false).uploadLocation(context);
@@ -172,7 +173,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     logtime = prefs.getString('loginTime');
-    print("LooooooogTime=====${logtime.toString()}");
+
+    cAdr = prefs.getString('CurAdrs');
+    print("LooooooogTime===place==${logtime.toString()} , ${cAdr.toString()}");
   }
 
   getCompaniId() async {
@@ -250,7 +253,8 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
           return new MainDashboard(
             context: context,
-            logtime: logtime.toString(),
+            logtime: logtime.toString(),curAdr: cAdr.toString(),
+
           );
         }
 
@@ -356,7 +360,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             // type: "drawer call",
             );
       case "0":
-        return MainDashboard(context: context, logtime: logtime.toString());
+        return MainDashboard(context: context, logtime: logtime.toString(),curAdr: cAdr.toString(),);
       case "1":
         {
           Provider.of<Controller>(context, listen: false).setDate(s[0], "");

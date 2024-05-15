@@ -13,9 +13,9 @@ class Unreg {
     );
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
-      onPressed: () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => RegistrationScreen()));
+      onPressed: () { Navigator.pop(context, false);
+        // Navigator.pushReplacement(context,
+        //     MaterialPageRoute(builder: (context) => RegistrationScreen()));
       },
     );
     // set up the AlertDialog

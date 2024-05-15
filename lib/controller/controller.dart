@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -305,10 +306,10 @@ class Controller extends ChangeNotifier {
   String? product_code;
   double? balance;
   //////
-  String currentAddress = 'Address    : ';
+  String currentAddress = '';
   late Position currentposition;
   String loginTime = "00:00:00";
-
+  Text pl = Text("");
 //////////////////////////////REGISTRATION ///////////////////////////
   Future<RegistrationData?> postRegistration(
       String company_code,
@@ -444,6 +445,19 @@ class Controller extends ChangeNotifier {
         snackbar.showSnackbar(context, "Check Internet Connection", "");
       }
     });
+  }
+
+  setpl(String pll, BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? cAdr = prefs.getString('CurAdrs');
+    pl = Text(
+      cAdr!,
+      style: GoogleFonts.aBeeZee(
+        textStyle: Theme.of(context).textTheme.bodyLarge,
+        fontSize: 13,
+      ),
+    );
+    notifyListeners();
   }
 
   static getRandomString(length, [characterString]) {
@@ -663,7 +677,7 @@ class Controller extends ChangeNotifier {
   Future determinePosition(BuildContext context, String activty) async {
     bool serviceEnabled;
     LocationPermission permission;
-    
+
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       Fluttertoast.showToast(msg: 'Please enable Your Location Service');
@@ -692,17 +706,17 @@ class Controller extends ChangeNotifier {
 
       DateTime now = DateTime.now();
       String datetoday = DateFormat('dd-MM-yyyy').format(DateTime.now());
-      
+
       currentposition = position;
-       if (activty == "LoginPunch") 
-       {
-       String formattedTime12Hour = DateFormat('hh:mm:ss a').format(now);
-       SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('loginTime', formattedTime12Hour); notifyListeners();
+      if (activty == "LoginPunch") {
+        String formattedTime12Hour = DateFormat('hh:mm:ss a').format(now);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('loginTime', formattedTime12Hour);
+        notifyListeners();
         print("logtime---------------$formattedTime12Hour");
         loginTime = formattedTime12Hour;
-       
-       }
+        notifyListeners();
+      }
 
       print("Street :${place.street}");
       print("Locality :${place.locality}");
@@ -717,10 +731,14 @@ class Controller extends ChangeNotifier {
       print("SubThoroughfare :${place.subThoroughfare}");
       print("Thoroughfare :${place.thoroughfare}");
 
-      currentAddress =
-          "${place.street}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea}, ${place.country}";
-     
-      notifyListeners();
+    currentAddress =
+          "${place.name}, ${place.locality} - ${place.postalCode}, ${place.administrativeArea}";
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('CurAdrs', currentAddress);
+          notifyListeners();
+          setpl(currentAddress,context);
+
+      
       NetConnection.networkConnection(context, "").then((value) async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String? sid = prefs.getString("sid");
@@ -1185,7 +1203,7 @@ class Controller extends ChangeNotifier {
     String? sid = prefs.getString("sid");
 
     try {
-      Uri url = Uri.parse("https://trafiqerp.in/order/fj/get_achead.php");
+      Uri url = Uri.parse("https://trafiqerp.in/order/fj/get_achead1.php");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? br_id1 = prefs.getString("br_id");
 
