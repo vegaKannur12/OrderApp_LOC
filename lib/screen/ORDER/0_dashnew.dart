@@ -176,6 +176,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
 
     cAdr = prefs.getString('CurAdrs');
     print("LooooooogTime===place==${logtime.toString()} , ${cAdr.toString()}");
+     setState(() {});
   }
 
   getCompaniId() async {

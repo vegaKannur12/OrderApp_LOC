@@ -85,6 +85,8 @@ class OrderAppDB {
   static final ac_gst = 'ac_gst';
   static final ac = 'ac';
   static final cag = 'cag';
+  static final la = 'la';
+  static final lo = 'lo';
   /////////////////userTable/////////
   static final uid = 'uid';
   static final u_name = 'u_name';
@@ -265,6 +267,17 @@ class OrderAppDB {
   static final latitude = 'latitude';
   static final longitude = 'longitude';
   static final activity = 'activity';
+  //////markLoc
+  static final staffid = 'staffid';
+  static final custid = 'custid';
+  static final datetim = 'datetim';
+  static final punch_lat = 'punch_lat';
+  static final punch_long = 'punch_long';
+  static final cust_lat = 'cust_lat';
+  static final cust_long = 'cust_long';
+  static final type = 'type';
+  static final trans_id = 'trans_id';
+  static final locname = 'locname';
 
   Future<Database> get database async {
     print("bjhs");
@@ -401,7 +414,9 @@ class OrderAppDB {
             $mo TEXT,
             $ac_gst TEXT,
             $ac TEXT,
-            $cag TEXT
+            $cag TEXT,
+            $la TEXT,
+            $lo TEXT
           )
           ''');
 
@@ -758,6 +773,22 @@ class OrderAppDB {
             $longitude TEXT,
             $activity TEXT,
             $status INTEGER
+          )
+          ''');
+    await db.execute('''
+          CREATE TABLE marklocationTable (
+            $id INTEGER PRIMARY KEY AUTOINCREMENT,
+            $staffid TEXT,
+            $custid TEXT,
+            $datetim TEXT,
+            $punch_lat TEXT,
+            $punch_long TEXT,
+            $cust_lat TEXT,
+            $cust_long TEXT,
+            $type TEXT,
+            $trans_id TEXT,
+            $locname TEXT,
+            $status INTEGER   
           )
           ''');
   }
@@ -1172,6 +1203,26 @@ class OrderAppDB {
     res2 = await db.rawInsert(query2);
   }
 
+  Future marklocationDetailsTable(
+      String? stid,
+      String? cid,
+      String? datetim,
+      String? punch_lat,
+      String? punch_lon,
+      String? cust_lat,
+      String? cust_lon,
+      String? typ,
+      String? transid,String? locname,
+      int? status) async {
+    final db = await database;
+    var res2;
+
+    var query2 =
+        'INSERT INTO marklocationTable(staffid, custid, datetim,punch_lat,punch_long ,cust_lat,cust_long, type,trans_id,locname,status) VALUES ("${stid}", "${cid}"," ${datetim}","${punch_lat}","${punch_lon}","${cust_lat}","${cust_lon}","${typ}","${transid}","${locname}","${status}")';
+
+    res2 = await db.rawInsert(query2);
+  }
+
   ////////////////////insert to return table/////////////////////////////////
   Future insertreturnMasterandDetailsTable(
     String item,
@@ -1476,10 +1527,10 @@ class OrderAppDB {
   Future insertAccoundHeads(AccountHead accountHead) async {
     final db = await database;
     var query =
-        'INSERT INTO accountHeadsTable(ac_code, hname, gtype, ac_ad1, ac_ad2, ac_ad3, area_id, phn, ba, ri, rc, ht, mo, ac_gst, ac, cag) VALUES("${accountHead.code}", "${accountHead.hname}", "${accountHead.gtype}", "${accountHead.ad1}", "${accountHead.ad2}", "${accountHead.ad3}", "${accountHead.aid}", "${accountHead.ph}", ${accountHead.ba}, "${accountHead.ri}", "${accountHead.rc}", "${accountHead.ht}", "${accountHead.mo}", "${accountHead.gst}", "${accountHead.ac}", "${accountHead.cag}")';
+        'INSERT INTO accountHeadsTable(ac_code, hname, gtype, ac_ad1, ac_ad2, ac_ad3, area_id, phn, ba, ri, rc, ht, mo, ac_gst, ac, cag, la, lo) VALUES("${accountHead.code}", "${accountHead.hname}", "${accountHead.gtype}", "${accountHead.ad1}", "${accountHead.ad2}", "${accountHead.ad3}", "${accountHead.aid}", "${accountHead.ph}", ${accountHead.ba}, "${accountHead.ri}", "${accountHead.rc}", "${accountHead.ht}", "${accountHead.mo}", "${accountHead.gst}", "${accountHead.ac}", "${accountHead.cag}", "${accountHead.latitude}", "${accountHead.longitude}")';
     var res = await db.rawInsert(query);
     print(query);
-    print(res);
+    print("Achead Inserted $res");
     return res;
   }
 
@@ -1782,6 +1833,15 @@ class OrderAppDB {
     var res = await db
         .rawQuery("SELECT sid FROM staffDetailsTable WHERE sname = '$sname'");
     print("sid result......$res");
+    return res;
+  }
+
+  select_Lati_Longi(String code) async {
+    print("code.......$code");
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT la,lo FROM accountHeadsTable WHERE ac_code = '$code'");
+    print("latitude,longitude result......$res");
     return res;
   }
   /////////////////////////max of from table//////////////////////
@@ -2781,13 +2841,39 @@ class OrderAppDB {
     print("result Location status = 0----$res");
     return res;
   }
+  selectMarkLocDateTable(String stid,String ctid) async {
+  print("-----------------$stid, $ctid");
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT datetim FROM marklocationTable where staffid='$stid' and custid='$ctid'");
+    // print("query2----$query2");
+    // if (res.length > 0) {
+    //   result = await db.rawQuery(query2);
+    // }
+    print("result repeate Location----$res");
+    return res;
+  }
 
-  updatLocationTable(int id) async 
-  {
+  selectmarkLocationTable() async {
+    Database db = await instance.database;
+    var res1 = await db.rawQuery("SELECT id FROM marklocationTable  where marklocationTable.status==0");
+    var res = await db.rawQuery("SELECT staffid,custid,datetim,punch_lat,punch_long,cust_lat,cust_long,type,trans_id,locname FROM  marklocationTable  where marklocationTable.status==0");
+    print("result MarkLocation----$res");
+    return [res1,res];
+  }
+
+  updatLocationTable(int id) async {
     Database db = await instance.database;
     var res =
         await db.rawUpdate('UPDATE locationTable SET status=1 WHERE id=$id');
     print("Location update responsee----$id---$res");
+    return res;
+  }
+  updatMarkLocationTable(int id) async {
+    Database db = await instance.database;
+    var res =
+        await db.rawUpdate('UPDATE marklocationTable SET status=1 WHERE id=$id');
+    print("Mark Location update responsee----$id---$res");
     return res;
   }
 

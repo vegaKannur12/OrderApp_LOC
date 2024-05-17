@@ -15,6 +15,9 @@ class AccountHead {
   String? gst;
   String? ac;
   String? cag;
+  String? latitude;
+  String? longitude;
+
 
   AccountHead(
       {this.code,
@@ -32,7 +35,10 @@ class AccountHead {
       this.mo,
       this.gst,
       this.ac,
-      this.cag});
+      this.cag,
+      this.latitude,
+      this.longitude
+      });
 
   AccountHead.fromJson(Map<String, dynamic> json) {
     code = json['code'];
@@ -51,6 +57,8 @@ class AccountHead {
     gst = json['gst'];
     ac = json['ac'];
     cag = json['cag'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
   }
 
   Map<String, dynamic> toJson() {
@@ -71,6 +79,8 @@ class AccountHead {
     data['gst'] = this.gst;
     data['ac'] = this.ac;
     data['cag'] = this.cag;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     return data;
   }
 }

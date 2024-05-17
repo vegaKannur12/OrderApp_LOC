@@ -8,8 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:marsproducts/screen/ORDER/0_dashnew.dart';
 
-
-
 class CommonPopup {
   int sales_id = 0;
   String? cid;
@@ -284,7 +282,8 @@ class CommonPopup {
                                       },
                                       child: Text("Yes"),
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor: P_Settings.salewaveColor,
+                                          backgroundColor:
+                                              P_Settings.salewaveColor,
                                           textStyle: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold)),
@@ -342,7 +341,8 @@ class CommonPopup {
                                       },
                                       child: Text("No"),
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor: P_Settings.salewaveColor,
+                                          backgroundColor:
+                                              P_Settings.salewaveColor,
                                           textStyle: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold)),
@@ -371,7 +371,10 @@ class CommonPopup {
 
                           Future.delayed(Duration(seconds: 2), () {
                             Navigator.of(context).pop(true);
-                            if (type == "sale order") {
+                            if (type == "sale order") {print("hai sale order");
+                              Provider.of<Controller>(context, listen: false)
+                                  .marklocation(
+                                      context, custmerId.toString(), "1");
                               Navigator.of(context).push(
                                 PageRouteBuilder(
                                     opaque: false, // set to false

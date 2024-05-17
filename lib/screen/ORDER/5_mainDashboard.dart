@@ -19,7 +19,11 @@ class MainDashboard extends StatefulWidget {
   String logtime;
   String curAdr;
   BuildContext context;
-  MainDashboard({Key? key, required this.context, required this.logtime, required this.curAdr})
+  MainDashboard(
+      {Key? key,
+      required this.context,
+      required this.logtime,
+      required this.curAdr})
       : super(key: key);
 
   @override
@@ -53,18 +57,22 @@ class _MainDashboardState extends State<MainDashboard> {
     print("formattedDate...$formattedDate");
     print("sid ......$sid");
 
-    // if (Provider.of<Controller>(context, listen: false).areaId != null) {
+    // if (Provider.of<Controller>(context, listen: false).areaId != null)
+    // {
     //   Provider.of<Controller>(context, listen: false).dashboardSummery(
     //       sid!,
     //       s[0],
     //       Provider.of<Controller>(context, listen: false).areaId!,
     //       widget.context);
-    // } else {
-    //   if (userType == "staff") {
+    //}
+    //else
+    //{
+    //   if (userType == "staff")
+    //   {
     //     Provider.of<Controller>(context, listen: false)
     //         .dashboardSummery(sid!, s[0], "",widget.context);
     //   }
-    // }
+    //}
     // Provider.of<Controller>(context, listen: false).todayOrder(s[0], context);
   }
 
@@ -129,12 +137,25 @@ class _MainDashboardState extends State<MainDashboard> {
                             children: [
                               Row(
                                 children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.black,
-                                    radius: 15,
-                                    child: Icon(
-                                      Icons.person,
-                                      color: Colors.yellow,
+                                  GestureDetector(
+                                    onLongPress: () async {
+                                      List<Map<String, dynamic>> list =
+                                          await OrderAppDB.instance
+                                              .getListOfTables();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TableList(list: list)),
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.black,
+                                      radius: 15,
+                                      child: Icon(
+                                        Icons.person,
+                                        color: Colors.yellow,
+                                      ),
                                     ),
                                   ),
                                   Padding(
@@ -196,8 +217,23 @@ class _MainDashboardState extends State<MainDashboard> {
                           ),
                         ),
                         Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [value.pl]),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${widget.curAdr}",
+                              style: GoogleFonts.aBeeZee(
+                                  textStyle:
+                                      Theme.of(context).textTheme.bodyLarge,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 40, 97, 143)),
+                            ),
+                          ],
+                        )
+                        // Row(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     children: [value.pl]),
+                        ,
                         Row(
                           children: [
                             IconButton(

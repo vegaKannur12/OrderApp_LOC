@@ -1360,22 +1360,35 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                     .white,
                                                                 fontSize: 14),
                                                           ),
-                                                          onPressed:
-                                                              _isButtonEnabled
-                                                                  ? () {
-                                                                      // Disable the button after it's clicked
-                                                                      setState(
-                                                                          () {
-                                                                        _isButtonEnabled =
-                                                                            false;
-                                                                      });
-                                                                      // Call the provided onPressed callback
-                                                                      print("clicked once..");
-                                                                      // widget
-                                                                      //     .onPressed
-                                                                      //     ?.call();
-                                                                    }
-                                                                  : null,
+                                                          onPressed: () {
+                                                            // _isButtonEnabled
+                                                            //     ? () {
+                                                            //         // Disable the button after it's clicked
+                                                            //         setState(
+                                                            //             () {
+                                                            //           _isButtonEnabled =
+                                                            //               false;
+                                                            //         });
+                                                            //         // Call the provided onPressed callback
+                                                            //         print("clicked once..");
+                                                            if (_formKey
+                                                                .currentState!
+                                                                .validate()) {
+                                                              Provider.of<Controller>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .marklocation(
+                                                                      context,
+                                                                      custmerId.toString()!,"0");
+                                                            }
+                                                          },
+
+                                                          // widget
+                                                          //     .onPressed
+                                                          //     ?.call();
+                                                          //   }
+                                                          // : null,
                                                           style: ElevatedButton
                                                               .styleFrom(
                                                             backgroundColor:

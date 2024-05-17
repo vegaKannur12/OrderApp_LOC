@@ -356,7 +356,7 @@ class OrderBottomSheet {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 15.0, right: 15, bottom: 18),
+                                    left: 15.0, right: 15, bottom: 5),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -496,7 +496,7 @@ class OrderBottomSheet {
                                             },
                                             child: Text(
                                               "Add ",
-                                              style: TextStyle(fontSize: 15),
+                                              style: TextStyle(fontSize: 15,color: Colors.white),
                                             )))
                                   ],
                                 ),

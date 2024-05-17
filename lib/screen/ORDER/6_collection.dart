@@ -214,7 +214,7 @@ class _CollectionPageState extends State<CollectionPage> {
                           SizedBox(
                             height: size.height * 0.01,
                           ),
-                           Text("Outstanding",
+                          Text("Outstanding",
                               style: TextStyle(
                                 fontSize: 15,
                               )),
@@ -405,6 +405,10 @@ class _CollectionPageState extends State<CollectionPage> {
                                     await Provider.of<Controller>(context,
                                             listen: false)
                                         .todayCollection(s[0], gen_condition!);
+                                    Provider.of<Controller>(context,
+                                            listen: false)
+                                        .marklocation(context, widget.cuid!,
+                                            "2");
                                     tst.toast("Saved");
                                   }
                                 },

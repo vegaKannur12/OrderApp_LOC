@@ -208,13 +208,15 @@ class StaffLogin extends StatelessWidget {
                                                       .selectUser(
                                                           controller1.text,
                                                           controller2.text);
-
-                                                  if (result.isEmpty) {
+                                                  if (result.isEmpty) 
+                                                  {
                                                     visible.value = true;
                                                     print(
                                                         "visible===${visible.value}");
-                                                  } else if (result[0] ==
-                                                      "success") {
+                                                  } 
+                                                  else if (result[0] ==
+                                                      "success") 
+                                                      {
                                                     visible.value = false;
                                                     final prefs =
                                                         await SharedPreferences
@@ -299,7 +301,13 @@ class StaffLogin extends StatelessWidget {
                                                         .areaidFrompopup = null;
                                                     prefs.setBool(
                                                         "staffLog", true);
-                                                 await Provider.of<Controller>(context, listen: false).determinePosition(context,"LoginPunch");
+                                                    await Provider.of<
+                                                                Controller>(
+                                                            context,
+                                                            listen: false)
+                                                        .determinePosition(
+                                                            context,
+                                                            "LoginPunch");
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -533,19 +541,19 @@ class StaffLogin extends StatelessWidget {
                   EdgeInsets.only(bottom: topInsets + size.height * 0.34),
               controller: controllerValue,
               decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide(
-                                color: const Color.fromARGB(255, 199, 198, 198),
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide(
-                                color: const Color.fromARGB(255, 199, 198, 198),
-                                width: 1.0,
-                              ),
-                            ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(
+                      color: const Color.fromARGB(255, 199, 198, 198),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(
+                      color: const Color.fromARGB(255, 199, 198, 198),
+                      width: 1.0,
+                    ),
+                  ),
                   prefixIcon: type == "password"
                       ? const Icon(Icons.password)
                       : const Icon(Icons.person),
