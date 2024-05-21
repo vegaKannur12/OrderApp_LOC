@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:marsproducts/CUSTOMER/add_cus_location.dart';
 import 'package:marsproducts/components/autocomplete.dart';
 import 'package:marsproducts/components/commoncolor.dart';
 import 'package:marsproducts/components/customToast.dart';
@@ -32,7 +33,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../reports/upload_history.dart';
 import '../reports/upload_pending.dart';
 import '6_orderForm.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 class Dashboard extends StatefulWidget {
   String? type;
 
@@ -92,15 +93,22 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     }
     Navigator.of(context).pop(); // close the drawer
   }
-
+clearingg()
+{
+  Provider.of<Controller>(context, listen: false).clearLOMarkText();
+}
   @override
   void initState() {
     // Provider.of<Controller>(context, listen: false).postRegistration("RONPBQ9AD5D",context);
     // TODO: implement initState
     print("returned---");
     super.initState();
-    Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
-
+     WidgetsBinding.instance
+        .addPostFrameCallback((_) {
+Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
+  clearingg();
+        });
+    
     drawerOpts.clear();
     print(
         "menu from splash------${Provider.of<Controller>(context, listen: false).menu_index}");
@@ -354,7 +362,16 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
             br_length: 0,
           );
         }
-
+case "CL":
+        {
+          // Provider.of<Controller>(context, listen: false)
+          //     .getCompanyData(context);
+          return AddCustomerLOC(
+            type: "drawer call",
+            msg: "",
+            br_length: 0,
+          );
+        }
       case "HR":
         // title = "Download data";
         return History(
@@ -853,6 +870,24 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
+                      ListTile(
+                        trailing: Icon(Icons.add),
+                        onTap: () async {
+                        //  Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => AddCustomerLOC()),
+                        //     );
+                          _onSelectItem(0, "CL");
+                        },
+                        title: Text(
+                          "Customer Location",
+                          style: GoogleFonts.aBeeZee(
+                            // textStyle: Theme.of(context).textTheme.bodyText2,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
                       // ListTile(
                       //   trailing: Icon(Icons.settings),
                       //   onTap: () async {
@@ -933,6 +968,14 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
+                        ListTile(
+                        title: Icon(Icons.route,color: Colors.blue,),
+                        onTap: () async {
+                          _launchUrl();
+                         
+                        },
+                       
+                      ),
                     ],
                   ),
                 );
@@ -957,7 +1000,12 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         ));
   }
 }
-
+Future<void> _launchUrl() async {
+  if (!await launchUrl(Uri.parse("https://trafiqerp.in/order/map_rute/index2.php?staff_id=VGMHD2"),
+  mode: LaunchMode.inAppWebView)) {
+    throw Exception('Could not launch ');
+  }
+}
 Future<bool> _onBackPressed(BuildContext context) async {
   return await showDialog(
     context: context,

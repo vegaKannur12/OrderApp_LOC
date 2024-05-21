@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:marsproducts/components/commoncolor.dart';
@@ -66,18 +67,18 @@ class StaffLogin extends StatelessWidget {
             //           .deleteFromTableCommonQuery("maxSeriesTable", "");
             //     },
             //     icon: Icon(Icons.delete)),
-            IconButton(
-              onPressed: () async {
-                List<Map<String, dynamic>> list =
-                    await OrderAppDB.instance.getListOfTables();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TableList(list: list)),
-                );
-              },
-              icon: Icon(Icons.table_bar),
-            ),
+            // IconButton(
+            //   onPressed: () async {
+            //     List<Map<String, dynamic>> list =
+            //         await OrderAppDB.instance.getListOfTables();
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => TableList(list: list)),
+            //     );
+            //   },
+            //   icon: Icon(Icons.table_bar),
+            // ),
             PopupMenuButton<int>(
               itemBuilder: (context) => [
                 PopupMenuItem(
@@ -181,166 +182,182 @@ class StaffLogin extends StatelessWidget {
                                         child: SizedBox(
                                           height: size.height * 0.06,
                                           child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  P_Settings.wavecolor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        20), // <-- Radius
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    P_Settings.wavecolor,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20), // <-- Radius
+                                                ),
                                               ),
-                                            ),
-                                            onPressed: () async {
-                                              result.clear();
-                                              SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
+                                              onPressed: () async {
+                                                result.clear();
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
 
-                                              userType =
-                                                  prefs.getString("userType");
+                                                userType =
+                                                    prefs.getString("userType");
 
-                                              print("usertype staff $userType");
-                                              if (_formKey.currentState!
-                                                  .validate()) {
-                                                if (userType == "admin") {
-                                                  result = await OrderAppDB
-                                                      .instance
-                                                      .selectUser(
-                                                          controller1.text,
-                                                          controller2.text);
-                                                  if (result.isEmpty) 
-                                                  {
-                                                    visible.value = true;
-                                                    print(
-                                                        "visible===${visible.value}");
-                                                  } 
-                                                  else if (result[0] ==
-                                                      "success") 
-                                                      {
-                                                    visible.value = false;
-                                                    final prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    await prefs.setString(
-                                                        'sid', result[1]);
-                                                    await prefs.setString(
-                                                        'st_username',
-                                                        controller1.text);
-                                                    await prefs.setString(
-                                                        'st_pwd',
-                                                        controller2.text);
-                                                    Provider.of<Controller>(
-                                                            context,
-                                                            listen: false)
-                                                        .areaSelecton = null;
-                                                    Provider.of<Controller>(
-                                                            context,
-                                                            listen: false)
-                                                        .areaidFrompopup = null;
-                                                    // Provider.of<Controller>(
-                                                    //             context,
-                                                    //             listen: false).userName=
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Dashboard()),
-                                                    );
-                                                  }
-                                                } else if (userType ==
-                                                    "staff") {
-                                                  String user =
-                                                      controller1.text.trim();
-                                                  String pwd =
-                                                      controller2.text.trim();
-
-                                                  result = await OrderAppDB
-                                                      .instance
-                                                      .selectStaff(user, pwd);
-                                                  print("selection----$result");
-                                                  if (result.isEmpty) {
-                                                    visible.value = true;
-                                                    print(
-                                                        "visible===${visible.value}");
-                                                  } else if (result[0] ==
-                                                      "success") {
-                                                    visible.value = false;
-                                                    print(
-                                                        "result login......${result[0]}");
-                                                    Provider.of<Controller>(
-                                                                context,
-                                                                listen: false)
-                                                            .sname =
-                                                        controller1.text;
-
-                                                    final prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    await prefs.setString(
-                                                        'sid', result[1]);
-                                                    await prefs.setString(
-                                                        'st_username', user);
-                                                    await prefs.setString(
-                                                        'st_pwd', pwd);
-                                                    print(
-                                                        "visible===${visible.value}");
-                                                    Provider.of<Controller>(
-                                                            context,
-                                                            listen: false)
-                                                        .insertStaffLogDetails(
-                                                            result[1],
+                                                print(
+                                                    "usertype staff $userType");
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  if (userType == "admin") {
+                                                    result = await OrderAppDB
+                                                        .instance
+                                                        .selectUser(
                                                             controller1.text,
-                                                            date!);
-                                                    Provider.of<Controller>(
-                                                            context,
-                                                            listen: false)
-                                                        .areaSelecton = null;
-                                                    Provider.of<Controller>(
-                                                            context,
-                                                            listen: false)
-                                                        .areaidFrompopup = null;
-                                                    prefs.setBool(
-                                                        "staffLog", true);
-                                                    await Provider.of<
-                                                                Controller>(
-                                                            context,
-                                                            listen: false)
-                                                        .determinePosition(
-                                                            context,
-                                                            "LoginPunch");
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Dashboard()),
-                                                    );
-                                                  }
+                                                            controller2.text);
+                                                    if (result.isEmpty) {
+                                                      visible.value = true;
+                                                      print(
+                                                          "visible===${visible.value}");
+                                                    } else if (result[0] ==
+                                                        "success") {
+                                                      visible.value = false;
+                                                      final prefs =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      await prefs.setString(
+                                                          'sid', result[1]);
+                                                      await prefs.setString(
+                                                          'st_username',
+                                                          controller1.text);
+                                                      await prefs.setString(
+                                                          'st_pwd',
+                                                          controller2.text);
+                                                      Provider.of<Controller>(
+                                                              context,
+                                                              listen: false)
+                                                          .areaSelecton = null;
+                                                      Provider.of<Controller>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .areaidFrompopup =
+                                                          null;
+                                                      // Provider.of<Controller>(
+                                                      //             context,
+                                                      //             listen: false).userName=
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Dashboard()),
+                                                      );
+                                                    }
+                                                  } else if (userType ==
+                                                      "staff") {
+                                                    String user =
+                                                        controller1.text.trim();
+                                                    String pwd =
+                                                        controller2.text.trim();
 
-                                                  //  await OrderAppDB.instance.getArea(controller1.text);
+                                                    result = await OrderAppDB
+                                                        .instance
+                                                        .selectStaff(user, pwd);
+                                                    print(
+                                                        "selection----$result");
+                                                    if (result.isEmpty) {
+                                                      visible.value = true;
+                                                      print(
+                                                          "visible===${visible.value}");
+                                                    } else if (result[0] ==
+                                                        "success") {
+                                                      visible.value = false;
+                                                      print(
+                                                          "result login......${result[0]}");
+                                                      Provider.of<Controller>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .sname =
+                                                          controller1.text;
+
+                                                      final prefs =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      await prefs.setString(
+                                                          'sid', result[1]);
+                                                      await prefs.setString(
+                                                          'st_username', user);
+                                                      await prefs.setString(
+                                                          'st_pwd', pwd);
+                                                      print(
+                                                          "visible===${visible.value}");
+                                                      Provider.of<Controller>(
+                                                              context,
+                                                              listen: false)
+                                                          .insertStaffLogDetails(
+                                                              result[1],
+                                                              controller1.text,
+                                                              date!);
+                                                      Provider.of<Controller>(
+                                                              context,
+                                                              listen: false)
+                                                          .areaSelecton = null;
+                                                      Provider.of<Controller>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .areaidFrompopup =
+                                                          null;
+                                                      prefs.setBool(
+                                                          "staffLog", true);
+                                                      await Provider.of<
+                                                                  Controller>(
+                                                              context,
+                                                              listen: false)
+                                                          .determinePosition(
+                                                              context,
+                                                              "LoginPunch");
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                Dashboard()),
+                                                      );
+                                                    }
+
+                                                    //  await OrderAppDB.instance.getArea(controller1.text);
+                                                  }
                                                 }
-                                              }
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: const <Widget>[
-                                                Text(
-                                                  'LOGIN',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_forward,
-                                                  size: 20,
-                                                  color: Colors.white,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                              },
+                                              child: Consumer<Controller>(
+                                                  builder:
+                                                      (context, value, child) {
+                                                if (value.determineLoad) {
+                                                  return SpinKitThreeBounce(
+                                                    // backgroundColor:,
+                                                    color: Colors.white,
+                                                    size: 15,
+
+                                                    // valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
+                                                    // value: 0.25,
+                                                  );
+                                                } else {
+                                                  return Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        'LOGIN',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Icon(
+                                                        Icons.arrow_forward,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ],
+                                                  );
+                                                }
+                                              })),
                                         ),
                                       ),
                                       Padding(

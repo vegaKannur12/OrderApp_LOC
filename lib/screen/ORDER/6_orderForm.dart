@@ -99,6 +99,7 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     Provider.of<Controller>(context, listen: false).getOrderno();
+    // Provider.of<Controller>(context, listen: false).clearLOMarkText();
     Provider.of<Controller>(context, listen: false).customer_visibility;
     date = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
     print(
@@ -687,7 +688,10 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                                   return ListTile(
                                                                                     trailing: const Icon(Icons.arrow_circle_right_rounded),
                                                                                     onTap: () {
-                                                                                      Provider.of<Controller>(context, listen: false).getBalance(cid, values.custmerDetails[index]['ac_code']!, context);
+                                                                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                                        Provider.of<Controller>(context, listen: false).getBalance(cid, values.custmerDetails[index]['ac_code']!, context);
+                                                                                        Provider.of<Controller>(context, listen: false).selectmarked(context, custmerId.toString());
+                                                                                      });
                                                                                       setState(() {
                                                                                         customertext.text = values.custmerDetails[index]['hname'];
                                                                                         custmerId = values.custmerDetails[index]['ac_code'];
@@ -1380,7 +1384,9 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                           false)
                                                                   .marklocation(
                                                                       context,
-                                                                      custmerId.toString()!,"0");
+                                                                      custmerId
+                                                                          .toString()!,
+                                                                      "0");
                                                             }
                                                           },
 
@@ -1433,6 +1439,42 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                               ),
                                             ],
                                           ),
+                                SizedBox(
+                                  height: size.height * 0.04,
+                                ),
+                                values.locMarkLoading
+                                    ? SpinKitThreeBounce(
+                                        color: Colors.blue,
+                                        size: 15,
+                                      )
+                                    : values.marked.toString() == " " ||
+                                            values.marked == null
+                                        ? Container()
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                values.marked.toString(),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.red),
+                                              ),
+                                            ],
+                                          ),
+                                SizedBox(
+                                  height: size.height * 0.04,
+                                ),
+                                values.lomaLoad
+                                    ? SpinKitThreeBounce(
+                                        color: Colors.blue,
+                                        size: 15,
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [values.loma]),
                               ],
                             ),
                           ),

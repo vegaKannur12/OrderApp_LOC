@@ -778,6 +778,7 @@ class OrderAppDB {
     await db.execute('''
           CREATE TABLE marklocationTable (
             $id INTEGER PRIMARY KEY AUTOINCREMENT,
+            $fp TEXT,  
             $staffid TEXT,
             $custid TEXT,
             $datetim TEXT,
@@ -788,7 +789,8 @@ class OrderAppDB {
             $type TEXT,
             $trans_id TEXT,
             $locname TEXT,
-            $status INTEGER   
+            $status INTEGER
+             
           )
           ''');
   }
@@ -1204,6 +1206,7 @@ class OrderAppDB {
   }
 
   Future marklocationDetailsTable(
+      String? fp,
       String? stid,
       String? cid,
       String? datetim,
@@ -1218,7 +1221,7 @@ class OrderAppDB {
     var res2;
 
     var query2 =
-        'INSERT INTO marklocationTable(staffid, custid, datetim,punch_lat,punch_long ,cust_lat,cust_long, type,trans_id,locname,status) VALUES ("${stid}", "${cid}"," ${datetim}","${punch_lat}","${punch_lon}","${cust_lat}","${cust_lon}","${typ}","${transid}","${locname}","${status}")';
+        'INSERT INTO marklocationTable(fp,staffid, custid, datetim,punch_lat,punch_long ,cust_lat,cust_long, type,trans_id,locname,status) VALUES ("${fp}","${stid}", "${cid}"," ${datetim}","${punch_lat}","${punch_lon}","${cust_lat}","${cust_lon}","${typ}","${transid}","${locname}","${status}")';
 
     res2 = await db.rawInsert(query2);
   }
@@ -2857,7 +2860,7 @@ class OrderAppDB {
   selectmarkLocationTable() async {
     Database db = await instance.database;
     var res1 = await db.rawQuery("SELECT id FROM marklocationTable  where marklocationTable.status==0");
-    var res = await db.rawQuery("SELECT staffid,custid,datetim,punch_lat,punch_long,cust_lat,cust_long,type,trans_id,locname FROM  marklocationTable  where marklocationTable.status==0");
+    var res = await db.rawQuery("SELECT fp,staffid,custid,datetim,punch_lat,punch_long,cust_lat,cust_long,type,trans_id,locname FROM  marklocationTable  where marklocationTable.status==0");
     print("result MarkLocation----$res");
     return [res1,res];
   }

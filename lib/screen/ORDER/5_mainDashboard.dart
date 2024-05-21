@@ -7,6 +7,7 @@ import 'package:marsproducts/components/areaPopup.dart';
 import 'package:marsproducts/components/commoncolor.dart';
 import 'package:marsproducts/controller/controller.dart';
 import 'package:marsproducts/db_helper.dart';
+import 'package:marsproducts/screen/ORDER/6_customer_creation.dart';
 import 'package:marsproducts/screen/ORDER/6_orderForm.dart';
 import 'package:marsproducts/service/tableList.dart';
 import 'package:provider/provider.dart';
@@ -291,6 +292,7 @@ class _MainDashboardState extends State<MainDashboard> {
                                       fontSize: 14),
                                 ),
                                 onTap: () {
+                                    Provider.of<Controller>(context, listen: false).clearLOMarkText();
                                   // if (widget.type == "return from cartList") {
                                   //   return OrderForm(
                                   //       widget.areaName!, "sale order");
@@ -344,6 +346,7 @@ class _MainDashboardState extends State<MainDashboard> {
                                       fontSize: 14),
                                 ),
                                 onTap: () {
+                                    Provider.of<Controller>(context, listen: false).clearLOMarkText();
                                   value.balance = null;
                                   Navigator.push(
                                       context,
@@ -355,39 +358,52 @@ class _MainDashboardState extends State<MainDashboard> {
                             ),
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(
-                        //       top: 4.0, left: 8, right: 8),
-                        //   child: Card(
-                        //     elevation: 4,
-                        //     color: Color.fromARGB(255, 250, 248, 248),
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.all(8.0),
-                        //       child: ListTile(
-                        //         leading: Image.asset(
-                        //           "asset/customer.png",
-                        //           height: size.height * 0.058,
-                        //         ),
-                        //         title: Text(
-                        //           "CUSTOMER CREATION",
-                        //           style: TextStyle(
-                        //               fontWeight: FontWeight.bold,
-                        //               fontSize: 13),
-                        //         ),
-                        //         onTap: () {
-                        //           Navigator.push(
-                        //               context,
-                        //               MaterialPageRoute(
-                        //                 builder: (context) => CustomerCreation(
-                        //                   sid: sid!,
-                        //                   os: os,
-                        //                 ),
-                        //               ));
-                        //         },
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 4.0, left: 8, right: 8),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: BorderSide(
+                                color: Color.fromARGB(255, 192, 191, 191),
+                                width: 1.0,
+                              ),
+                            ),
+                            color: Colors.white,
+                            elevation: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  child: Image.asset(
+                                    "asset/customer.png",
+                                    height: size.height * 0.058,
+                                  ),
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Color.fromARGB(255, 4, 93, 167),
+                                ),
+                                title: Text(
+                                  "CUSTOMER CREATION",
+                                  style: GoogleFonts.oswald(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CustomerCreation(
+                                          sid: sid!,
+                                          os: os,
+                                        ),
+                                      ));
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
 
                         Padding(
                           padding: const EdgeInsets.only(
@@ -423,6 +439,7 @@ class _MainDashboardState extends State<MainDashboard> {
                                       fontSize: 14),
                                 ),
                                 onTap: () {
+                                  Provider.of<Controller>(context, listen: false).clearLOMarkText();
                                   value.balance = null;
                                   Navigator.push(
                                       context,

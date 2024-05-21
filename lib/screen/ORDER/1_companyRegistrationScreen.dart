@@ -243,15 +243,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         context);
                               }
                             },
-                            child: Text("Register")),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.09,
-                      ),
-                      Consumer<Controller>(
+                            child:Consumer<Controller>(
                         builder: (context, value, child) {
                           if (value.isLoading) {
-                            return SpinKitCircle(
+                            return SpinKitThreeBounce(
                               // backgroundColor:,
                               color: P_Settings.wavecolor,
 
@@ -259,10 +254,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               // value: 0.25,
                             );
                           } else {
-                            return Container();
+                            return Text("Register");
                           }
                         },
                       ),
+                        )   
+                            //  Text("Register")),
+                      ),
+                      // SizedBox(
+                      //   height: size.height * 0.09,
+                      // ),
+                      
                     ],
                   ),
                 ),

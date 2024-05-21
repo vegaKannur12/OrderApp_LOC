@@ -78,7 +78,9 @@ class _SplashScreenState extends State<SplashScreen>
                           staffLog != null &&
                           staffLog!) {
                         return Dashboard();
-                      } else {
+                      } 
+                      else 
+                      {
                         return StaffLogin();
                       }
                     } 
