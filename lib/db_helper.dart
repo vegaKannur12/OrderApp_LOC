@@ -57,6 +57,7 @@ class OrderAppDB {
   static final ph = 'ph';
   static final area = 'area';
   static final datetime = 'datetime';
+  static final track = 'track';
 
   // int DB_VERSION = 2;
 
@@ -361,7 +362,8 @@ class OrderAppDB {
             $ad2 TEXT,
             $ad3 TEXT,
             $ph TEXT,
-            $area TEXT    
+            $area TEXT,
+            $track INTEGER  
           )
           ''');
     await db.execute('''
@@ -379,7 +381,8 @@ class OrderAppDB {
             $id INTEGER PRIMARY KEY AUTOINCREMENT,
             $sid TEXT NOT NULL,
             $sname TEXT,
-            $datetime TEXT    
+            $datetime TEXT,
+            $track INTEGER    
           )
           ''');
     await db.execute('''
@@ -1390,7 +1393,7 @@ class OrderAppDB {
   Future insertStaffDetails(StaffDetails sdata) async {
     final db = await database;
     var query2 =
-        'INSERT INTO staffDetailsTable(sid, sname, uname, pwd, ad1, ad2, ad3, ph, area) VALUES("${sdata.sid}", "${sdata.sname}", "${sdata.unme}", "${sdata.pwd}", "${sdata.ad1}", "${sdata.ad2}", "${sdata.ad3}", "${sdata.ph}", "${sdata.area}")';
+        'INSERT INTO staffDetailsTable(sid, sname, uname, pwd, ad1, ad2, ad3, ph, area,track) VALUES("${sdata.sid}", "${sdata.sname}", "${sdata.unme}", "${sdata.pwd}", "${sdata.ad1}", "${sdata.ad2}", "${sdata.ad3}", "${sdata.ph}", "${sdata.area}", ${sdata.track})';
     var res = await db.rawInsert(query2);
     print(query2);
     // print(res);
@@ -1410,10 +1413,10 @@ class OrderAppDB {
 
 ////////////////////////staff login details table insert ////////////////
   Future insertStaffLoignDetails(
-      String sid, String sname, String datetime) async {
+      String sid, String sname, String datetime,int track) async {
     final db = await database;
     var query2 =
-        'INSERT INTO staffLoginDetailsTable(sid, sname, datetime) VALUES("${sid}", "${sname}", "${datetime}")';
+        'INSERT INTO staffLoginDetailsTable(sid, sname, datetime,track) VALUES("${sid}", "${sname}", "${datetime}",$track)';
     var res = await db.rawInsert(query2);
     print("stafflog....$query2");
     // print(res);
@@ -1450,9 +1453,10 @@ class OrderAppDB {
   /////////////////////////ustaff login authentication////////////
   selectStaff(String uname, String pwd) async {
     String result = "";
-    List<String> resultList = [];
+    List<dynamic> resultList = [];
     String? sid;
     String? sname;
+    int? strak;
 
     print("uname---Password----${uname}--${pwd}");
     resultList.clear();
@@ -1469,15 +1473,18 @@ class OrderAppDB {
         sid = staff['sid'];
         sname = staff['sname'];
         result = "success";
+        strak=int.parse(staff['track'].toString());
         resultList.add(result);
         resultList.add(sid!);
         resultList.add(sname!);
+        resultList.add(strak);
         break;
       } else {
         print("No match");
         result = "failed";
         sid = "";
         sname = "";
+        strak=3;
 
         // resultList.add(result);
         // resultList.add(sid);

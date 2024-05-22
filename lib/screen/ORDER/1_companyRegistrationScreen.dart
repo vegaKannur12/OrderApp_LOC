@@ -248,7 +248,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           if (value.isLoading) {
                             return SpinKitThreeBounce(
                               // backgroundColor:,
-                              color: P_Settings.wavecolor,
+                              color: P_Settings.wavecolor,size: 15,
 
                               // valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
                               // value: 0.25,

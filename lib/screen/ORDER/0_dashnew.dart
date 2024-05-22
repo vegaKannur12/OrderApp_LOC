@@ -364,8 +364,10 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
         }
 case "CL":
         {
-          // Provider.of<Controller>(context, listen: false)
-          //     .getCompanyData(context);
+           WidgetsBinding.instance
+        .addPostFrameCallback((_) {
+          Provider.of<Controller>(context, listen: false)
+              .clearCUSMarkText();});
           return AddCustomerLOC(
             type: "drawer call",
             msg: "",

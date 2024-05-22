@@ -312,10 +312,16 @@ class Controller extends ChangeNotifier {
   String loginTime = "00:00:00";
   Text pl = Text("");
   Text loma = Text(" ");
+  Text cusMark = Text(" ");
   String cust_lat = "";
   String cust_longi = "";
   bool lomaLoad = false;
+  bool cusMarkLoad = false;
   bool determineLoad = false;
+  bool checkdistLoading = false;
+  double pres_lati = 0.0;
+  double pres_longi = 0.0;
+  Placemark pres_place = Placemark();
 
 //////////////////////////////REGISTRATION ///////////////////////////
   Future<RegistrationData?> postRegistration(
@@ -709,12 +715,20 @@ class Controller extends ChangeNotifier {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     try {
+      cusMarkLoad = true;
+      notifyListeners();
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       String? cid = prefs.getString("cid");
+
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
       NetConnection.networkConnection(context, "").then((value) async {
+        await OrderAppDB.instance.upadteCommonQuery(
+            'accountHeadsTable',
+            "la='${position.latitude}',lo='${position.longitude}'",
+            "ac_code='${custid}'");
+
         Uri url =
             Uri.parse("https://trafiqerp.in/order/fj/mark_cust_location.php");
 
@@ -730,9 +744,30 @@ class Controller extends ChangeNotifier {
         );
         print("bodymarkCustLOc ${body}");
         var map = jsonDecode(response.body);
+        if (map != null) {
+          cusMarkLoad = false;
+
+          cusMark = Text("Customer Location Marked!!!",
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue));
+          notifyListeners();
+        } else {
+          cusMarkLoad = false;
+          cusMark = Text("Try again!!!",
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red));
+          notifyListeners();
+        }
+
         print("map markCustLOc ${map}");
       });
     } catch (e) {
+      cusMarkLoad = false;
+      notifyListeners();
       print(e);
     }
   }
@@ -811,12 +846,7 @@ class Controller extends ChangeNotifier {
           try {
             print(
                 "position.latitude, position.longitude========${position.latitude}, ${position.longitude}");
-            double distanceInMeters = Geolocator.distanceBetween(
-                position.latitude,
-                position.longitude,
-                11.87448027262817,
-                75.3781816389671);
-            print("Distance in meters=======$distanceInMeters");
+
             location(
                 currentAddress.toString(),
                 "$now",
@@ -928,6 +958,12 @@ class Controller extends ChangeNotifier {
     print("clearedLOMA");
     loma = Text(" ");
     marked = " ";
+    notifyListeners();
+  }
+
+  clearCUSMarkText() {
+    print("clearedLOMA");
+    cusMark = Text(" ");
     notifyListeners();
   }
 
@@ -2438,9 +2474,9 @@ class Controller extends ChangeNotifier {
   }
 
   //////////////////staff log details insertion//////////////////////
-  insertStaffLogDetails(String sid, String sname, String datetime) async {
+  insertStaffLogDetails(String sid, String sname, String datetime,int track) async {
     var logdata =
-        await OrderAppDB.instance.insertStaffLoignDetails(sid, sname, datetime);
+        await OrderAppDB.instance.insertStaffLoignDetails(sid, sname, datetime,track);
     notifyListeners();
   }
 
@@ -4979,6 +5015,83 @@ class Controller extends ChangeNotifier {
     notifyListeners();
   }
 
+  getpresentloc() async {
+    pres_place = Placemark();
+    pres_lati = 0.0;
+    pres_longi = 0.0;
+    notifyListeners();
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(
+          msg:
+              'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      pres_place = placemarks[0];
+      pres_lati = position.latitude;
+      pres_longi = position.longitude;
+      notifyListeners();
+    } catch (e) {}
+  }
+
+  Future<int> checkDistance(String custID) async {
+    try {
+      checkdistLoading=true;
+      notifyListeners();
+      await getpresentloc();
+      var res = await selectSettings("set_code in('DIS_VALUE')");
+      var res1 = await OrderAppDB.instance.select_Lati_Longi(custID);
+      print("cusID=====$custID");
+      print("set value result= ${settingsList1[0]['set_value']}");
+      double dislimit = double.parse(settingsList1[0]['set_value']);
+      print("dislimit= ${dislimit}");
+      print("get lat ----$res1");
+      List getlat = res1;
+      cust_lat = getlat[0]['la'].toString();
+      cust_longi = getlat[0]['lo'].toString();
+      notifyListeners();
+      print("cust_lat----$cust_lat,$cust_longi");
+      print("Present latLong----$pres_lati,$pres_longi");
+      double distanceInMeters = Geolocator.distanceBetween(pres_lati,
+          pres_longi, double.parse(cust_lat), double.parse(cust_longi));
+      print("Distance in meters=======$distanceInMeters");
+      if (distanceInMeters < dislimit) {
+        print("$distanceInMeters, $dislimit");
+         checkdistLoading=false;
+      notifyListeners();
+        return 1;
+      } else {
+         checkdistLoading=false;
+         notifyListeners();
+        return 0;
+      }
+    } catch (e) {
+       checkdistLoading=false;
+      notifyListeners();
+      return 3;
+    }
+  }
+
   setDate(String date1, String date2) {
     fromDate = date1;
     todate = date2;
@@ -5359,4 +5472,5 @@ class Controller extends ChangeNotifier {
     //           );
     notifyListeners();
   }
+  
 }

@@ -27,7 +27,7 @@ class StaffLogin extends StatelessWidget {
   TextEditingController controller1 = TextEditingController();
   TextEditingController controller2 = TextEditingController();
   CustomPopup popup = CustomPopup();
-  List<String> result = [];
+  List<dynamic> result = [];
   String? userType;
   Unreg popupunreg = Unreg();
   // GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -283,6 +283,9 @@ class StaffLogin extends StatelessWidget {
                                                           'st_username', user);
                                                       await prefs.setString(
                                                           'st_pwd', pwd);
+                                                      await prefs.setInt(
+                                                          'strak', result[3]);
+                                                          print("result3=${result[3].toString()}");
                                                       print(
                                                           "visible===${visible.value}");
                                                       Provider.of<Controller>(
@@ -291,7 +294,7 @@ class StaffLogin extends StatelessWidget {
                                                           .insertStaffLogDetails(
                                                               result[1],
                                                               controller1.text,
-                                                              date!);
+                                                              date!,result[3]);
                                                       Provider.of<Controller>(
                                                               context,
                                                               listen: false)

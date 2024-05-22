@@ -1020,35 +1020,77 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                           if (_formKey
                                                               .currentState!
                                                               .validate()) {
-                                                            Provider.of<Controller>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .fetchwallet();
                                                             final prefs =
                                                                 await SharedPreferences
                                                                     .getInstance();
-                                                            String? cuid =
-                                                                prefs.getString(
-                                                                    'cus_id');
-                                                            Navigator.of(
-                                                                    context)
-                                                                .push(
-                                                              PageRouteBuilder(
-                                                                opaque:
-                                                                    false, // set to false
-                                                                pageBuilder: (_, __, ___) => CollectionPage(
-                                                                    os: os,
-                                                                    sid: sid,
-                                                                    cuid: custmerId
-                                                                        .toString(),
-                                                                    aid: Provider.of<Controller>(
-                                                                            context,
-                                                                            listen:
-                                                                                false)
-                                                                        .areaId),
-                                                              ),
-                                                            );
+                                                            int? tr =
+                                                                prefs.getInt(
+                                                                    'strak');
+                                                            print(
+                                                                "trrrrrrrrrrrrrrrrr$tr");
+                                                            if (tr == 1) {
+                                                              collectionMethod();
+                                                            } else {
+                                                              int i = await Provider.of<
+                                                                          Controller>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .checkDistance(
+                                                                      custmerId
+                                                                          .toString());
+                                                              print(
+                                                                  "1111111=$i");
+                                                              if (i == 1) {
+                                                                collectionMethod();
+                                                              } else if (i ==
+                                                                  0) {
+                                                                print("no");
+                                                                showDialog(
+                                                                    barrierDismissible:
+                                                                        false,
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      Future.delayed(
+                                                                          Duration(
+                                                                              seconds: 2),
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop(true);
+                                                                      });
+                                                                      return AlertDialog(
+                                                                          content:
+                                                                              Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.end,
+                                                                        children: [
+                                                                          Text(
+                                                                            'You are out of distance limit',
+                                                                            style:
+                                                                                TextStyle(color: P_Settings.extracolor),
+                                                                          ),
+                                                                          Icon(
+                                                                            Icons.dangerous_outlined,
+                                                                            color:
+                                                                                Colors.green,
+                                                                          )
+                                                                        ],
+                                                                      ));
+                                                                    });
+                                                              } else {
+                                                                CustomSnackbar
+                                                                    snk =
+                                                                    CustomSnackbar();
+                                                                snk.showSnackbar(
+                                                                    context,
+                                                                    "Check Permissions",
+                                                                    "");
+                                                                print(
+                                                                    "check permissions");
+                                                              }
+                                                            }
                                                           }
                                                         },
                                                         label: const Text(
@@ -1258,80 +1300,79 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                               currentFocus
                                                                   .unfocus();
                                                             }
-
-                                                            if (_formKey
-                                                                .currentState!
-                                                                .validate()) {
-                                                              Provider.of<Controller>(
+                                                            final prefs =
+                                                                await SharedPreferences
+                                                                    .getInstance();
+                                                            int? tr =
+                                                                prefs.getInt(
+                                                                    'strak');
+                                                            print(
+                                                                "trrrrrrrrrrrrrrrrr$tr");
+                                                            if (tr == 1) {
+                                                              addItemMethod(
+                                                                  oos, context);
+                                                            } else {
+                                                              int i = await Provider.of<
+                                                                          Controller>(
                                                                       context,
                                                                       listen:
                                                                           false)
-                                                                  .fromOrderbagTable_X001(
+                                                                  .checkDistance(
                                                                       custmerId
-                                                                          .toString(),
-                                                                      "sale order");
-                                                              // Provider.of<Controller>(
-                                                              //         context,
-                                                              //         listen:
-                                                              //             false)
-                                                              //     .getProductList(
-                                                              //         custmerId
-                                                              //             .toString());
-                                                              Provider.of<Controller>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .countFromTable(
-                                                                "orderBagTable",
-                                                                oos,
-                                                                custmerId
-                                                                    .toString(),
-                                                              );
-
-                                                              Provider.of<Controller>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .fetchProductCompanyList();
-
-                                                              Provider.of<Controller>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .filterCompany = false;
-
-                                                              // Provider.of<Controller>(
-                                                              //         context,
-                                                              //         listen:
-                                                              //             false)
-                                                              //     .getProductList(
-                                                              //         custmerId
-                                                              //             .toString());
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .push(
-                                                                PageRouteBuilder(
-                                                                  opaque:
-                                                                      false, // set to false
-                                                                  pageBuilder: (_, __, ___) => X001OrderItemSelection(
-                                                                      customerId:
-                                                                          custmerId
-                                                                              .toString(),
-                                                                      areaId: values.areaidFrompopup == null ||
-                                                                              values
-                                                                                  .areaidFrompopup!.isEmpty
-                                                                          ? Provider.of<Controller>(context, listen: false).areaAutoComplete[
-                                                                              0]
-                                                                          : Provider.of<Controller>(context, listen: false)
-                                                                              .areaidFrompopup!,
-                                                                      os: oos,
-                                                                      areaName: values.areaidFrompopup == null ||
-                                                                              values.areaidFrompopup!.isEmpty
-                                                                          ? Provider.of<Controller>(context, listen: false).areaAutoComplete[1]
-                                                                          : Provider.of<Controller>(context, listen: false).areaSelecton!,
-                                                                      type: "sale order"),
-                                                                ),
-                                                              );
+                                                                          .toString());
+                                                              print(
+                                                                  "1111111=$i");
+                                                              if (i == 1) {
+                                                                addItemMethod(
+                                                                    oos,
+                                                                    context);
+                                                              } else if (i ==
+                                                                  0) {
+                                                                print("no");
+                                                                showDialog(
+                                                                    barrierDismissible:
+                                                                        false,
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      Future.delayed(
+                                                                          Duration(
+                                                                              seconds: 2),
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop(true);
+                                                                      });
+                                                                      return AlertDialog(
+                                                                          content:
+                                                                              Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.end,
+                                                                        children: [
+                                                                          Text(
+                                                                            'You are out of distance limit',
+                                                                            style:
+                                                                                TextStyle(color: P_Settings.extracolor),
+                                                                          ),
+                                                                          Icon(
+                                                                            Icons.dangerous_outlined,
+                                                                            color:
+                                                                                Colors.green,
+                                                                          )
+                                                                        ],
+                                                                      ));
+                                                                    });
+                                                              } else {
+                                                                CustomSnackbar
+                                                                    snk =
+                                                                    CustomSnackbar();
+                                                                snk.showSnackbar(
+                                                                    context,
+                                                                    "Check Permissions",
+                                                                    "");
+                                                                print(
+                                                                    "check permissions");
+                                                              }
                                                             }
                                                           },
                                                           style: ElevatedButton
@@ -1364,37 +1405,110 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                     .white,
                                                                 fontSize: 14),
                                                           ),
-                                                          onPressed: () {
-                                                            // _isButtonEnabled
-                                                            //     ? () {
-                                                            //         // Disable the button after it's clicked
-                                                            //         setState(
-                                                            //             () {
-                                                            //           _isButtonEnabled =
-                                                            //               false;
-                                                            //         });
-                                                            //         // Call the provided onPressed callback
-                                                            //         print("clicked once..");
+                                                          onPressed: () async {
+                                                            final prefs =
+                                                                await SharedPreferences
+                                                                    .getInstance();
+                                                            int? tr =
+                                                                prefs.getInt(
+                                                                    'strak');
+                                                            print(
+                                                                "trrrrrrrrrrrrrrrrr$tr");
                                                             if (_formKey
                                                                 .currentState!
                                                                 .validate()) {
-                                                              Provider.of<Controller>(
+                                                              if (tr == 1) {
+                                                                Provider.of<Controller>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .marklocation(
+                                                                        context,
+                                                                        custmerId
+                                                                            .toString()!,
+                                                                        "0");
+                                                              } else {
+                                                                int i = await Provider.of<
+                                                                            Controller>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .checkDistance(
+                                                                        custmerId
+                                                                            .toString());
+                                                                print(
+                                                                    "1111111==$i");
+                                                                if (i == 1) {
+                                                                  Provider.of<Controller>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .marklocation(
+                                                                          context,
+                                                                          custmerId
+                                                                              .toString()!,
+                                                                          "0");
+                                                                } else if (i ==
+                                                                    0) {
+                                                                  print("no");
+                                                                  showDialog(
+                                                                      barrierDismissible:
+                                                                          false,
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) {
+                                                                        Future.delayed(
+                                                                            Duration(seconds: 2),
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop(true);
+                                                                        });
+                                                                        return AlertDialog(
+                                                                            content:
+                                                                                Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.end,
+                                                                          children: [
+                                                                            Text(
+                                                                              'You are out of distance limit',
+                                                                              style: TextStyle(color: P_Settings.extracolor),
+                                                                            ),
+                                                                            Icon(
+                                                                              Icons.dangerous_outlined,
+                                                                              color: Colors.green,
+                                                                            )
+                                                                          ],
+                                                                        ));
+                                                                      });
+                                                                } else {
+                                                                  CustomSnackbar
+                                                                      snk =
+                                                                      CustomSnackbar();
+                                                                  snk.showSnackbar(
                                                                       context,
-                                                                      listen:
-                                                                          false)
-                                                                  .marklocation(
-                                                                      context,
-                                                                      custmerId
-                                                                          .toString()!,
-                                                                      "0");
+                                                                      "Check Permissions",
+                                                                      "");
+                                                                  print(
+                                                                      "check permissions");
+                                                                }
+                                                              }
                                                             }
-                                                          },
 
-                                                          // widget
-                                                          //     .onPressed
-                                                          //     ?.call();
-                                                          //   }
-                                                          // : null,
+                                                            // if (_formKey
+                                                            //     .currentState!
+                                                            //     .validate()) {
+                                                            //   Provider.of<Controller>(
+                                                            //           context,
+                                                            //           listen:
+                                                            //               false)
+                                                            //       .marklocation(
+                                                            //           context,
+                                                            //           custmerId
+                                                            //               .toString()!,
+                                                            //           "0");
+                                                            // }
+                                                          },
                                                           style: ElevatedButton
                                                               .styleFrom(
                                                             backgroundColor:
@@ -1439,6 +1553,15 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                               ),
                                             ],
                                           ),
+                                SizedBox(
+                                  height: size.height * 0.04,
+                                ),
+                                values.checkdistLoading
+                                    ? SpinKitCircle(
+                                        color: Colors.blue,
+                                        size: 35,
+                                      )
+                                    : Container(),
                                 SizedBox(
                                   height: size.height * 0.04,
                                 ),
@@ -1491,6 +1614,78 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
     );
   }
 
+  collectionMethod() async {
+    Provider.of<Controller>(context, listen: false).fetchwallet();
+    final prefs = await SharedPreferences.getInstance();
+    String? cuid = prefs.getString('cus_id');
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false, // set to false
+        pageBuilder: (_, __, ___) => CollectionPage(
+            os: os,
+            sid: sid,
+            cuid: custmerId.toString(),
+            aid: Provider.of<Controller>(context, listen: false).areaId),
+      ),
+    );
+  }
+
+  addItemMethod(String oos, BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      Provider.of<Controller>(context, listen: false)
+          .fromOrderbagTable_X001(custmerId.toString(), "sale order");
+      // Provider.of<Controller>(
+      //         context,
+      //         listen:
+      //             false)
+      //     .getProductList(
+      //         custmerId
+      //             .toString());
+      Provider.of<Controller>(context, listen: false).countFromTable(
+        "orderBagTable",
+        oos,
+        custmerId.toString(),
+      );
+
+      Provider.of<Controller>(context, listen: false).fetchProductCompanyList();
+
+      Provider.of<Controller>(context, listen: false).filterCompany = false;
+
+      // Provider.of<Controller>(
+      //         context,
+      //         listen:
+      //             false)
+      //     .getProductList(
+      //         custmerId
+      //             .toString());
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          opaque: false, // set to false
+          pageBuilder: (_, __, ___) => X001OrderItemSelection(
+              customerId: custmerId.toString(),
+              areaId: Provider.of<Controller>(context, listen: false).areaidFrompopup ==
+                          null ||
+                      Provider.of<Controller>(context, listen: false)
+                          .areaidFrompopup!
+                          .isEmpty
+                  ? Provider.of<Controller>(context, listen: false)
+                      .areaAutoComplete[0]
+                  : Provider.of<Controller>(context, listen: false)
+                      .areaidFrompopup!,
+              os: oos,
+              areaName: Provider.of<Controller>(context, listen: false)
+                              .areaidFrompopup ==
+                          null ||
+                      Provider.of<Controller>(context, listen: false)
+                          .areaidFrompopup!
+                          .isEmpty
+                  ? Provider.of<Controller>(context, listen: false).areaAutoComplete[1]
+                  : Provider.of<Controller>(context, listen: false).areaSelecton!,
+              type: "sale order"),
+        ),
+      );
+    }
+  }
 ///////////////////////////////////////////////////////////////////
 }
 
