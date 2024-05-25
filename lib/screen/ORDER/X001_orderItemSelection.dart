@@ -139,8 +139,10 @@ class _X001OrderItemSelectionState extends State<X001OrderItemSelection> {
                         backgroundColor: Colors.orange, // background
                       ),
                       onPressed: () {
-                        print("haiOO");
-                        if (value.bagList.isNotEmpty || value.bagList.length!=0) {
+                        // print("haiOO");
+                        // print()
+                        if (value.bagList.isNotEmpty) {
+                          print("bbb${value.bagList}");
                           showDialog(
                             context: context,
                             builder: (BuildContext context) =>

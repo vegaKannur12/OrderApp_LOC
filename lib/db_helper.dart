@@ -1179,55 +1179,6 @@ class OrderAppDB {
     }
   }
 
-///////////////////////////////////////////////////////////////////////
-  Future locationDetailsTable(
-      String loc,
-      String uid,
-      String device,
-      String ldt,
-      String street,
-      String local,
-      String post,
-      String admarea,
-      String cntry,
-      String hash,
-      String isocntry,
-      String nm,
-      String subadmin,
-      String subloc,
-      String lati,
-      String longi,
-      String actvty,
-      int status) async {
-    final db = await database;
-    var res2;
-
-    var query2 =
-        'INSERT INTO locationTable(location_info, user_id, device_info,l_date,street ,locality,postalCode, administrativeArea,country,hashCod,iSOCountryCode,name,subAdministrativeArea,subLocality,latitude,longitude,activity,status) VALUES ("${loc}", "${uid}"," ${device}","${ldt}","${street}","${local}","${post}","${admarea}","${cntry}","${hash}","${isocntry}","${nm}","${subadmin}","${subloc}","${lati}","${longi}","${actvty}","${status}")';
-
-    res2 = await db.rawInsert(query2);
-  }
-
-  Future marklocationDetailsTable(
-      String? fp,
-      String? stid,
-      String? cid,
-      String? datetim,
-      String? punch_lat,
-      String? punch_lon,
-      String? cust_lat,
-      String? cust_lon,
-      String? typ,
-      String? transid,String? locname,
-      int? status) async {
-    final db = await database;
-    var res2;
-
-    var query2 =
-        'INSERT INTO marklocationTable(fp,staffid, custid, datetim,punch_lat,punch_long ,cust_lat,cust_long, type,trans_id,locname,status) VALUES ("${fp}","${stid}", "${cid}"," ${datetim}","${punch_lat}","${punch_lon}","${cust_lat}","${cust_lon}","${typ}","${transid}","${locname}","${status}")';
-
-    res2 = await db.rawInsert(query2);
-  }
 
   ////////////////////insert to return table/////////////////////////////////
   Future insertreturnMasterandDetailsTable(
@@ -1846,14 +1797,7 @@ class OrderAppDB {
     return res;
   }
 
-  select_Lati_Longi(String code) async {
-    print("code.......$code");
-    Database db = await instance.database;
-    var res = await db.rawQuery(
-        "SELECT la,lo FROM accountHeadsTable WHERE ac_code = '$code'");
-    print("latitude,longitude result......$res");
-    return res;
-  }
+  
   /////////////////////////max of from table//////////////////////
   // getMaxOfFieldValue(String os, String customerId) async {
   //   var res;
@@ -2838,55 +2782,6 @@ class OrderAppDB {
     return result;
   }
 
-/////////////////////////////////////////////////////////////
-  selectLocationTable() async {
-    Database db = await instance.database;
-
-    var res = await db.rawQuery(
-        "SELECT  * FROM  locationTable where locationTable.status==0");
-    // print("query2----$query2");
-    // if (res.length > 0) {
-    //   result = await db.rawQuery(query2);
-    // }
-    print("result Location status = 0----$res");
-    return res;
-  }
-  selectMarkLocDateTable(String stid,String ctid) async {
-  print("-----------------$stid, $ctid");
-    Database db = await instance.database;
-    var res = await db.rawQuery(
-        "SELECT datetim FROM marklocationTable where staffid='$stid' and custid='$ctid'");
-    // print("query2----$query2");
-    // if (res.length > 0) {
-    //   result = await db.rawQuery(query2);
-    // }
-    print("result repeate Location----$res");
-    return res;
-  }
-
-  selectmarkLocationTable() async {
-    Database db = await instance.database;
-    var res1 = await db.rawQuery("SELECT id FROM marklocationTable  where marklocationTable.status==0");
-    var res = await db.rawQuery("SELECT fp,staffid,custid,datetim,punch_lat,punch_long,cust_lat,cust_long,type,trans_id,locname FROM  marklocationTable  where marklocationTable.status==0");
-    print("result MarkLocation----$res");
-    return [res1,res];
-  }
-
-  updatLocationTable(int id) async {
-    Database db = await instance.database;
-    var res =
-        await db.rawUpdate('UPDATE locationTable SET status=1 WHERE id=$id');
-    print("Location update responsee----$id---$res");
-    return res;
-  }
-  updatMarkLocationTable(int id) async {
-    Database db = await instance.database;
-    var res =
-        await db.rawUpdate('UPDATE marklocationTable SET status=1 WHERE id=$id');
-    print("Mark Location update responsee----$id---$res");
-    return res;
-  }
-
   ////////////////////////////////////////////////////////
   selectReturnMasterTable() async {
     Database db = await instance.database;
@@ -3406,4 +3301,124 @@ class OrderAppDB {
       print("exce-=-------${e.toString()}");
     }
   }
+
+
+  ///////////...........Updation made by SREYA May2024......./////////////
+  
+  Future locationDetailsTable(
+      String loc,
+      String uid,
+      String device,
+      String ldt,
+      String street,
+      String local,
+      String post,
+      String admarea,
+      String cntry,
+      String hash,
+      String isocntry,
+      String nm,
+      String subadmin,
+      String subloc,
+      String lati,
+      String longi,
+      String actvty,
+      int status) async {
+    final db = await database;
+    var res2;
+
+    var query2 =
+        'INSERT INTO locationTable(location_info, user_id, device_info,l_date,street ,locality,postalCode, administrativeArea,country,hashCod,iSOCountryCode,name,subAdministrativeArea,subLocality,latitude,longitude,activity,status) VALUES ("${loc}", "${uid}"," ${device}","${ldt}","${street}","${local}","${post}","${admarea}","${cntry}","${hash}","${isocntry}","${nm}","${subadmin}","${subloc}","${lati}","${longi}","${actvty}","${status}")';
+
+    res2 = await db.rawInsert(query2);
+  }
+
+  Future marklocationDetailsTable(
+      String? fp,
+      String? stid,
+      String? cid,
+      String? datetim,
+      String? punch_lat,
+      String? punch_lon,
+      String? cust_lat,
+      String? cust_lon,
+      String? typ,
+      String? transid,String? locname,
+      int? status) async {
+    final db = await database;
+    var res2;
+
+    var query2 =
+        'INSERT INTO marklocationTable(fp,staffid, custid, datetim,punch_lat,punch_long ,cust_lat,cust_long, type,trans_id,locname,status) VALUES ("${fp}","${stid}", "${cid}"," ${datetim}","${punch_lat}","${punch_lon}","${cust_lat}","${cust_lon}","${typ}","${transid}","${locname}","${status}")';
+
+    res2 = await db.rawInsert(query2);
+  }
+
+select_Lati_Longi(String code) async {
+    print("code.......$code");
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT la,lo FROM accountHeadsTable WHERE ac_code = '$code'");
+    print("latitude,longitude result......$res");
+    return res;
+  }
+  select_lalo_cusid() async {
+    // print("code.......$code");
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT la,lo,ac_code FROM accountHeadsTable");
+    print("latitude,longitude,ac_code result......$res");
+    return res;
+  }
+
+  selectLocationTable() async {
+    Database db = await instance.database;
+
+    var res = await db.rawQuery(
+        "SELECT  * FROM  locationTable where locationTable.status==0");
+    // print("query2----$query2");
+    // if (res.length > 0) {
+    //   result = await db.rawQuery(query2);
+    // }
+    print("result Location status = 0----$res");
+    return res;
+  }
+  selectMarkLocDateTable(String stid,String ctid) async {
+  print("-----------------$stid, $ctid");
+    Database db = await instance.database;
+    var res = await db.rawQuery(
+        "SELECT datetim FROM marklocationTable where staffid='$stid' and custid='$ctid'");
+    // print("query2----$query2");
+    // if (res.length > 0) {
+    //   result = await db.rawQuery(query2);
+    // }
+    print("result repeate Location----$res");
+    return res;
+  }
+
+  selectmarkLocationTable() async {
+    Database db = await instance.database;
+    var res1 = await db.rawQuery("SELECT id FROM marklocationTable  where marklocationTable.status==0");
+    var res = await db.rawQuery("SELECT fp,staffid,custid,datetim,punch_lat,punch_long,cust_lat,cust_long,type,trans_id,locname FROM  marklocationTable  where marklocationTable.status==0");
+    print("result MarkLocation----$res");
+    return [res1,res];
+  }
+
+  updatLocationTable(int id) async {
+    Database db = await instance.database;
+    var res =
+        await db.rawUpdate('UPDATE locationTable SET status=1 WHERE id=$id');
+    print("Location update responsee----$id---$res");
+    return res;
+  }
+  updatMarkLocationTable(int id) async {
+    Database db = await instance.database;
+    var res =
+        await db.rawUpdate('UPDATE marklocationTable SET status=1 WHERE id=$id');
+    print("Mark Location update responsee----$id---$res");
+    return res;
+  }
+
+
+
 }

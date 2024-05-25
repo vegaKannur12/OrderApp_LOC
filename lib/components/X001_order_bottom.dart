@@ -194,7 +194,6 @@ class OrderBottomSheet {
                                               contentPadding: EdgeInsets.all(0),
                                               //border: InputBorder.none
                                             ),
-
                                             // maxLines: 1,
                                             // minLines: 1,
                                             keyboardType: TextInputType.number,
@@ -212,7 +211,8 @@ class OrderBottomSheet {
                                                         .text),
                                                     double.parse(
                                                         value.qty[index].text));
-                                              } else {
+                                              } 
+                                              else {
                                                 valueqty = 0.00;
                                               }
                                               Provider.of<Controller>(context,
@@ -410,10 +410,9 @@ class OrderBottomSheet {
                                               var pid =
                                                   value.orderitemList2[index]
                                                       ['prid'];
-                                              if (value.qty[index].text !=
-                                                      null &&
-                                                  value.qty[index].text
+                                              if (value.qty[index].text
                                                       .isNotEmpty) {
+                                                        print("if");
                                                 double total = double.parse(
                                                         value
                                                             .orderrate_X001[
@@ -469,7 +468,7 @@ class OrderBottomSheet {
                                                   os,
                                                   customerId,
                                                 );
-                                              } else {
+                                              } else {print("else");
                                                 // await OrderAppDB.instance
                                                 //     .upadteCommonQuery(
                                                 //         "orderBagTable",
@@ -481,7 +480,7 @@ class OrderBottomSheet {
                                                         listen: false)
                                                     .calculatesalesTotal(
                                                         os, customerId);
-                                                Provider.of<Controller>(context,
+                                               await Provider.of<Controller>(context,
                                                         listen: false)
                                                     .getBagDetails(
                                                         customerId, os);

@@ -838,7 +838,7 @@ case "CL":
                           _onSelectItem(0, "CD");
                         },
                         title: Text(
-                          "company Details",
+                          "Company Details",
                           style: GoogleFonts.aBeeZee(
                             // textStyle: Theme.of(context).textTheme.bodyText2,
                             fontSize: 17,
@@ -852,7 +852,7 @@ case "CL":
                           _onSelectItem(0, "DP");
                         },
                         title: Text(
-                          "download page",
+                          "Download page",
                           style: GoogleFonts.aBeeZee(
                             // textStyle: Theme.of(context).textTheme.bodyText2,
                             fontSize: 17,
@@ -865,7 +865,7 @@ case "CL":
                           _onSelectItem(0, "UL");
                         },
                         title: Text(
-                          "upload data",
+                          "Upload data",
                           style: GoogleFonts.aBeeZee(
                             // textStyle: Theme.of(context).textTheme.bodyText2,
                             fontSize: 17,
@@ -940,7 +940,7 @@ case "CL":
                           popup.showAlertDialog(context);
                         },
                         title: Text(
-                          "un-register",
+                          "Un-register",
                           style: GoogleFonts.aBeeZee(
                             // textStyle: Theme.of(context).textTheme.bodyText2,
                             fontSize: 17,
@@ -963,21 +963,19 @@ case "CL":
                                   builder: (context) => StaffLogin()));
                         },
                         title: Text(
-                          "logout",
+                          "Logout",
                           style: GoogleFonts.aBeeZee(
                             // textStyle: Theme.of(context).textTheme.bodyText2,
                             fontSize: 17,
                           ),
                         ),
                       ),
-                        ListTile(
-                        title: Icon(Icons.route,color: Colors.blue,),
-                        onTap: () async {
-                          _launchUrl();
-                         
-                        },
-                       
-                      ),
+                      //   ListTile(
+                      //   title: Icon(Icons.route,color: Colors.blue,),
+                      //   onTap: () async {
+                      //     _launchUrl();                      
+                      //   },                     
+                      // ),
                     ],
                   ),
                 );

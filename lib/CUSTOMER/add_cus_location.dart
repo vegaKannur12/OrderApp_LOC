@@ -57,7 +57,9 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
         backgroundColor: P_Settings.detailscolor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: P_Settings.wavecolor,
+          backgroundColor:
+          Colors.white,
+          //  P_Settings.wavecolor,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(6.0),
             child: Center(

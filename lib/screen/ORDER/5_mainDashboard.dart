@@ -291,8 +291,12 @@ class _MainDashboardState extends State<MainDashboard> {
                                       fontWeight: FontWeight.w600,
                                       fontSize: 14),
                                 ),
-                                onTap: () {
-                                    Provider.of<Controller>(context, listen: false).clearLOMarkText();
+                                onTap: () async {
+                                  Provider.of<Controller>(context,
+                                          listen: false).sortDistance(); ///TESTSORT
+                                  Provider.of<Controller>(context,
+                                          listen: false)
+                                      .clearLOMarkText();
                                   // if (widget.type == "return from cartList") {
                                   //   return OrderForm(
                                   //       widget.areaName!, "sale order");
@@ -346,7 +350,9 @@ class _MainDashboardState extends State<MainDashboard> {
                                       fontSize: 14),
                                 ),
                                 onTap: () {
-                                    Provider.of<Controller>(context, listen: false).clearLOMarkText();
+                                  Provider.of<Controller>(context,
+                                          listen: false)
+                                      .clearLOMarkText();
                                   value.balance = null;
                                   Navigator.push(
                                       context,
@@ -439,7 +445,9 @@ class _MainDashboardState extends State<MainDashboard> {
                                       fontSize: 14),
                                 ),
                                 onTap: () {
-                                  Provider.of<Controller>(context, listen: false).clearLOMarkText();
+                                  Provider.of<Controller>(context,
+                                          listen: false)
+                                      .clearLOMarkText();
                                   value.balance = null;
                                   Navigator.push(
                                       context,

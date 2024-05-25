@@ -225,9 +225,8 @@ class Controller extends ChangeNotifier {
   String? cr_amt;
   String? can_bill_count;
   String? can_bill_amt;
-  bool balanceLoading = false;
-  bool locMarkLoading = false;
 
+  bool balanceLoading = false;
   List<Map<String, dynamic>> remarkList = [];
   List<Map<String, dynamic>> remarkStaff = [];
   String? firstMenu;
@@ -305,22 +304,24 @@ class Controller extends ChangeNotifier {
   bool? customer_visibility = false;
   String? product_code;
   double? balance;
-  String? marked;
-  //////
+
+  ////////////
   String currentAddress = '';
   late Position currentposition;
   String loginTime = "00:00:00";
-  Text pl = Text("");
-  Text loma = Text(" ");
-  Text cusMark = Text(" ");
+  Text pl = const Text("");
+  Text loma = const Text(" ");
+  Text cusMark = const Text(" ");
   String cust_lat = "";
   String cust_longi = "";
   bool lomaLoad = false;
   bool cusMarkLoad = false;
   bool determineLoad = false;
   bool checkdistLoading = false;
+  bool locMarkLoading = false;
   double pres_lati = 0.0;
   double pres_longi = 0.0;
+  String? marked;
   Placemark pres_place = Placemark();
 
 //////////////////////////////REGISTRATION ///////////////////////////
@@ -458,19 +459,6 @@ class Controller extends ChangeNotifier {
         snackbar.showSnackbar(context, "Check Internet Connection", "");
       }
     });
-  }
-
-  setpl(String pll, BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? cAdr = prefs.getString('CurAdrs');
-    pl = Text(
-      cAdr!,
-      style: GoogleFonts.aBeeZee(
-        textStyle: Theme.of(context).textTheme.bodyLarge,
-        fontSize: 13,
-      ),
-    );
-    notifyListeners();
   }
 
   static getRandomString(length, [characterString]) {
@@ -687,641 +675,6 @@ class Controller extends ChangeNotifier {
     });
   }
 
-  mark_custLoc(BuildContext context, String custid) async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    determineLoad = true;
-    notifyListeners();
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        Fluttertoast.showToast(msg: 'Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      Fluttertoast.showToast(
-          msg:
-              'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    try {
-      cusMarkLoad = true;
-      notifyListeners();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      String? cid = prefs.getString("cid");
-
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      NetConnection.networkConnection(context, "").then((value) async {
-        await OrderAppDB.instance.upadteCommonQuery(
-            'accountHeadsTable',
-            "la='${position.latitude}',lo='${position.longitude}'",
-            "ac_code='${custid}'");
-
-        Uri url =
-            Uri.parse("https://trafiqerp.in/order/fj/mark_cust_location.php");
-
-        Map body = {
-          'cid': cid,
-          'cust_id': custid,
-          'latitude': position.latitude.toString(),
-          'longitude': position.longitude.toString()
-        };
-        http.Response response = await http.post(
-          url,
-          body: body,
-        );
-        print("bodymarkCustLOc ${body}");
-        var map = jsonDecode(response.body);
-        if (map != null) {
-          cusMarkLoad = false;
-
-          cusMark = Text("Customer Location Marked!!!",
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue));
-          notifyListeners();
-        } else {
-          cusMarkLoad = false;
-          cusMark = Text("Try again!!!",
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red));
-          notifyListeners();
-        }
-
-        print("map markCustLOc ${map}");
-      });
-    } catch (e) {
-      cusMarkLoad = false;
-      notifyListeners();
-      print(e);
-    }
-  }
-
-  Future determinePosition(BuildContext context, String activty) async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    determineLoad = true;
-    notifyListeners();
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        Fluttertoast.showToast(msg: 'Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      Fluttertoast.showToast(
-          msg:
-              'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    try {
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      Placemark place = placemarks[0];
-
-      DateTime now = DateTime.now();
-      String datetoday = DateFormat('dd-MM-yyyy').format(DateTime.now());
-
-      currentposition = position;
-      if (activty == "LoginPunch") {
-        String formattedTime12Hour = DateFormat('hh:mm:ss a').format(now);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('loginTime', formattedTime12Hour);
-        notifyListeners();
-        print("logtime---------------$formattedTime12Hour");
-        loginTime = formattedTime12Hour;
-        notifyListeners();
-      }
-
-      print("Street :${place.street}");
-      print("Locality :${place.locality}");
-      print("PostalCode :${place.postalCode}");
-      print("AdministrativeArea :${place.administrativeArea}");
-      print("Country :${place.country}");
-      print("HashCode :${place.hashCode}");
-      print("ISOCountryCode :${place.isoCountryCode}");
-      print("Name :${place.name}");
-      print("SubAdministrativeArea :${place.subAdministrativeArea}");
-      print("SubLocality :${place.subLocality}");
-      print("SubThoroughfare :${place.subThoroughfare}");
-      print("Thoroughfare :${place.thoroughfare}");
-
-      currentAddress =
-          "${place.name}, ${place.locality} - ${place.postalCode}, ${place.administrativeArea}";
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('CurAdrs', currentAddress);
-      notifyListeners();
-      setpl(currentAddress, context);
-
-      NetConnection.networkConnection(context, "").then((value) async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? sid = prefs.getString("sid");
-        String? fp = prefs.getString("fp");
-        if (value == true) {
-          try {
-            print(
-                "position.latitude, position.longitude========${position.latitude}, ${position.longitude}");
-
-            location(
-                currentAddress.toString(),
-                "$now",
-                datetoday,
-                "${place.street}",
-                "${place.locality}",
-                "${place.postalCode}",
-                "${place.administrativeArea}",
-                "${place.country}",
-                "${place.hashCode}",
-                "${place.isoCountryCode}",
-                "${place.name}",
-                "${place.subAdministrativeArea}",
-                "${place.subLocality}",
-                "${position.latitude}",
-                "${position.longitude}",
-                activty);
-            determineLoad = false;
-            notifyListeners();
-          } catch (e) {
-            print(e);
-          }
-        } else {
-          await OrderAppDB.instance.locationDetailsTable(
-              currentAddress.toString(),
-              sid.toString(),
-              fp.toString(),
-              now.toString(),
-              place.street.toString(),
-              place.locality.toString(),
-              place.postalCode.toString(),
-              place.administrativeArea.toString(),
-              place.country.toString(),
-              place.hashCode.toString(),
-              place.isoCountryCode.toString(),
-              place.name.toString(),
-              place.subAdministrativeArea.toString(),
-              place.subLocality.toString(),
-              position.latitude.toString(),
-              position.longitude.toString(),
-              activty,
-              0);
-          determineLoad = false;
-          notifyListeners();
-          print("Inserted to loc table");
-        }
-      });
-    } catch (e) {
-      determineLoad = false;
-      notifyListeners();
-      print(e);
-    }
-  }
-
-  selectmarked(BuildContext context, String custid) async {
-    print("selentry");
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? sid = prefs.getString("sid");
-      marked = " ";
-      locMarkLoading = true;
-      notifyListeners();
-
-      var result = await OrderAppDB.instance
-          .selectMarkLocDateTable(sid.toString(), custid.toString());
-      if (result.length > 0) {
-        print("datetim res=$result");
-        DateTime now = DateTime.now();
-        String datenow = DateFormat('dd-MM-yyyy').format(now);
-
-        for (int i = 0; i < result.length; i++) {
-          String originalDateString = result[i]['datetim'].toString().trim();
-          print("originalDateString: $originalDateString");
-
-          DateTime dateqry1 = DateTime.parse(originalDateString);
-          print("dateqry1: $dateqry1");
-
-          String dateqry = DateFormat('dd-MM-yyyy').format(dateqry1);
-          print("dateqry: $dateqry , $datenow");
-          if (dateqry.toString().trim() == datenow.toString().trim()) {
-            locMarkLoading = false;
-            marked = "Location Already Marked";
-            loma = Text("");
-
-            notifyListeners();
-            // print("selentryloo[] $marked");
-            break;
-          }
-        }
-      } else {
-        marked = " ";
-        // loma=" ";
-        lomaLoad = false;
-        locMarkLoading = false;
-        // notifyListeners();
-        //  print("selentryloo" " $marked");
-        notifyListeners();
-      }
-
-      print("selentryloo[] $marked");
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
-
-  clearLOMarkText() {
-    print("clearedLOMA");
-    loma = Text(" ");
-    marked = " ";
-    notifyListeners();
-  }
-
-  clearCUSMarkText() {
-    print("clearedLOMA");
-    cusMark = Text(" ");
-    notifyListeners();
-  }
-
-  marklocation(BuildContext context, String custid, String type) async {
-    int y = 0;
-    loma = Text("");
-    notifyListeners();
-    //cust_lat,cust_longi
-    try {
-      lomaLoad = true;
-      notifyListeners();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? sid = prefs.getString("sid");
-      String? cid = prefs.getString("cid");
-      String? fp = prefs.getString("fp");
-      String? com = prefs.getString("company_id");
-      // prefs.setString("company_id", company_code);
-      print("cid , sid====$cid,$sid");
-      var result = await OrderAppDB.instance
-          .selectMarkLocDateTable(sid.toString(), custid.toString());
-      if (result.length > 0) {
-        print("datetim res=$result");
-        DateTime now = DateTime.now();
-        String datenow = DateFormat('dd-MM-yyyy').format(now);
-        // String originalDateString = result[0]['datetim'];
-        // DateTime dateqry1 = DateTime.parse(originalDateString);
-        // String dateqry = DateFormat('dd-MM-yyyy').format(dateqry1);
-        // print("dateqry===${dateqry.toString()} ,");
-        for (int i = 0; i < result.length; i++) {
-          String originalDateString = result[i]['datetim'].toString().trim();
-          print("originalDateString: $originalDateString");
-          DateTime dateqry1 = DateTime.parse(originalDateString);
-          print("dateqry1: $dateqry1");
-          String dateqry = DateFormat('dd-MM-yyyy').format(dateqry1);
-          print("dateqry: $dateqry , $datenow");
-          if (dateqry.toString() == datenow.toString()) {
-            y = 1;
-            notifyListeners();
-            break;
-          }
-        }
-      } else {
-        if (y == 0) {
-          print("YES");
-          bool serviceEnabled;
-          LocationPermission permission;
-
-          serviceEnabled = await Geolocator.isLocationServiceEnabled();
-          if (!serviceEnabled) {
-            Fluttertoast.showToast(msg: 'Please enable Your Location Service');
-          }
-
-          permission = await Geolocator.checkPermission();
-          if (permission == LocationPermission.denied) {
-            permission = await Geolocator.requestPermission();
-            if (permission == LocationPermission.denied) {
-              Fluttertoast.showToast(msg: 'Location permissions are denied');
-            }
-          }
-
-          if (permission == LocationPermission.deniedForever) {
-            Fluttertoast.showToast(
-                msg:
-                    'Location permissions are permanently denied, we cannot request permissions.');
-          }
-
-          Position position = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high);
-          try {
-            List<Placemark> placemarks = await placemarkFromCoordinates(
-                position.latitude, position.longitude);
-            Placemark place = placemarks[0];
-
-            DateTime now = DateTime.now();
-            String datetoday = DateFormat('dd-MM-yyyy').format(DateTime.now());
-            currentposition = position;
-
-            await OrderAppDB.instance.marklocationDetailsTable(
-                fp,
-                sid,
-                custid,
-                now.toString(),
-                position.latitude.toString(),
-                position.longitude.toString(),
-                cust_lat.toString(),
-                cust_longi.toString(),
-                type,
-                "",
-                place.street.toString(),
-                0);
-            print("inserted to markloc DB");
-
-            NetConnection.networkConnection(context, "").then((value) async {
-              if (value == true) {
-                try {
-                  var result =
-                      await OrderAppDB.instance.selectmarkLocationTable();
-                  print("res 0${result[0]}");
-                  if (result[1].length > 0) {
-                    // isUpload = true;
-                    String jsonE = jsonEncode(result[1]);
-                    var jsonDe = jsonDecode(jsonE);
-                    print("jsonLoc--${jsonDe}");
-                    for (int i = 0; i < result[0].length; i++) {
-                      for (var item in jsonDe) {
-                        String idd = result[0][i]['id'].toString();
-                        print("idd $idd");
-                        var jsonString = jsonEncode(item);
-                        print("jsonstring=$jsonString");
-
-                        Uri url = Uri.parse(
-                            "https://trafiqerp.in/order/fj/mark_location.php");
-
-                        Map body = {'cid': cid, 'rm': jsonString};
-                        // ignore: avoid_print
-                        print("Mark loc body----$body");
-                        // isLoading = true;
-                        // notifyListeners();
-                        http.Response response = await http.post(
-                          url,
-                          body: body,
-                        );
-                        var map = jsonDecode(response.body);
-                        if (map != null) {
-                          print("Mark loc mp----$map");
-                          var result = await OrderAppDB.instance
-                              .updatMarkLocationTable(int.parse(idd));
-                          loma = Text("Location Marked!!!",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue));
-                          notifyListeners();
-                          // CustomSnackbar snackbar = CustomSnackbar();
-                          // snackbar.showSnackbar(
-                          //     context, "Location Marked!!!", "");
-                          // OrderAppDB.instance.updatLocationTable(item['id']);
-                        }
-                      }
-                    }
-                  }
-                  lomaLoad = false;
-                  notifyListeners();
-                } catch (e) {
-                  lomaLoad = false;
-                  notifyListeners();
-                  print(e);
-                }
-              } else {
-                lomaLoad = false;
-                notifyListeners();
-                // await OrderAppDB.instance.locationDetailsTable(
-                //     currentAddress.toString(),
-                //     sid.toString(),
-                //     fp.toString(),
-                //     now.toString(),
-                //     place.street.toString(),
-                //     place.locality.toString(),
-                //     place.postalCode.toString(),
-                //     place.administrativeArea.toString(),
-                //     place.country.toString(),
-                //     place.hashCode.toString(),
-                //     place.isoCountryCode.toString(),
-                //     place.name.toString(),
-                //     place.subAdministrativeArea.toString(),
-                //     place.subLocality.toString(),
-                //     position.latitude.toString(),
-                //     position.longitude.toString(),
-                //     activty,
-                //     0);
-                // print("Inserted to loc table");
-              }
-            });
-          } catch (e) {
-            print(e);
-          }
-        } else {
-          lomaLoad = false;
-          loma = Text("");
-          notifyListeners();
-          print("NO");
-          CustomSnackbar snackbar = CustomSnackbar();
-          snackbar.showSnackbar(context, "Location Already Marked.!", "");
-        }
-      }
-    } catch (e) {}
-  }
-
-  uploadLocation(BuildContext context) {
-    NetConnection.networkConnection(context, "").then((value) async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? sid = prefs.getString("sid");
-      String? fp = prefs.getString("fp");
-      DateTime now = DateTime.now();
-      String datetoday = DateFormat('dd-MM-yyyy').format(DateTime.now());
-      if (value == true) {
-        try {
-          var result = await OrderAppDB.instance.selectLocationTable();
-          if (result.length > 0) {
-            // isUpload = true;
-            String jsonE = jsonEncode(result);
-            var jsonDe = jsonDecode(jsonE);
-            print("jsonLoc--${jsonDe}");
-            for (var item in jsonDe) {
-              Uri url = Uri.parse("https://trafiqerp.in/rapi/save_loct.php");
-              Map body = {
-                'location_info': item['location_info'],
-                'user_id': item['user_id'],
-                'device_info': item['device_info'],
-                'l_date': item['l_date'],
-                'Street': item['street'],
-                'Locality': item['locality'],
-                'PostalCode': item['postalCode'],
-                'AdministrativeArea': item['administrativeArea'],
-                'Country': item['country'],
-                'HashCode': item['hashCod'],
-                'ISOCountryCode': item['iSOCountryCode'],
-                'Name': item['name'],
-                'SubAdministrativeArea': item['subAdministrativeArea'],
-                'SubLocality': item['subLocality'],
-                'latitude': item['latitude'],
-                'longitude': item['longitude'],
-                'activity': item['activity'],
-              };
-              // ignore: avoid_print
-              print("loc body----$body");
-              // isLoading = true;
-              // notifyListeners();
-              http.Response response = await http.post(
-                url,
-                body: body,
-              );
-
-              var map = jsonDecode(response.body);
-              if (map != null) {
-                OrderAppDB.instance.updatLocationTable(item['id']);
-              }
-            }
-          }
-        } catch (e) {
-          print(e);
-        }
-      }
-    });
-
-    OrderAppDB.instance.selectLocationTable();
-  }
-
-  location(
-      String place,
-      String datetime,
-      String datetoday,
-      String street,
-      String local,
-      String post,
-      String adminarea,
-      String cntry,
-      String hash,
-      String isocode,
-      String name,
-      String subadmin,
-      String sublocal,
-      String lati,
-      String longi,
-      String activity) async {
-    // NetConnection.networkConnection(context).then((value) async {
-    //   if (value == true) {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? fp = prefs.getString("fp");
-    String? sid = prefs.getString("sid");
-
-    try {
-      Uri url = Uri.parse("https://trafiqerp.in/rapi/save_loct.php");
-      Map body = {
-        'location_info': place,
-        'user_id': sid,
-        'device_info': fp,
-        'l_date': datetime,
-        'Street': street,
-        'Locality': local,
-        'PostalCode': post,
-        'AdministrativeArea': adminarea,
-        'Country': cntry,
-        'HashCode': hash,
-        'ISOCountryCode': isocode,
-        'Name': name,
-        'SubAdministrativeArea': subadmin,
-        'SubLocality': sublocal,
-        'latitude': lati,
-        'longitude': longi,
-        'activity': activity,
-      };
-      // ignore: avoid_print
-      print("loc body----$body");
-      // isLoading = true;
-      // notifyListeners();
-      http.Response response = await http.post(
-        url,
-        body: body,
-      );
-      // print("body $body");
-
-      var map = jsonDecode(response.body);
-      if (map != null) {
-        print("location map----$map");
-        await OrderAppDB.instance.locationDetailsTable(
-            place,
-            sid.toString(),
-            fp.toString(),
-            datetime,
-            street,
-            local,
-            post,
-            adminarea,
-            cntry,
-            hash,
-            isocode,
-            name,
-            subadmin,
-            sublocal,
-            lati,
-            longi,
-            activity,
-            1);
-        print("Inserted to loc table after api insert");
-      } else {
-        await OrderAppDB.instance.locationDetailsTable(
-            place,
-            sid.toString(),
-            fp.toString(),
-            datetime,
-            street,
-            local,
-            post,
-            adminarea,
-            cntry,
-            hash,
-            isocode,
-            name,
-            subadmin,
-            sublocal,
-            lati,
-            longi,
-            activity,
-            0);
-        print("Inserted to loc table after api insert fail");
-      }
-      // ignore: avoid_print
-
-      // await locationHistory(datetoday);
-      notifyListeners();
-    } catch (e) {
-      // ignore: avoid_print
-      print(e);
-      return null;
-    }
-  }
-
   /////////////////////////// GET BALANCE ////////////////////////////
   Future<Balance?> getBalance(
       String? cid, String? code, BuildContext context) async {
@@ -1392,7 +745,6 @@ class Controller extends ChangeNotifier {
     });
   }
 
-  getLati_longi() {}
   /////////////////////// GET STAFF DETAILS////////////////////////////////
   Future<StaffDetails?> getStaffDetails(
       String cid, int index, String page) async {
@@ -1401,7 +753,6 @@ class Controller extends ChangeNotifier {
       Uri url = Uri.parse("https://trafiqerp.in/order/fj/get_staff.php");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? br_id1 = prefs.getString("br_id");
-
       String branch_id;
       if (br_id1 == null || br_id1 == " " || br_id1 == "null") {
         branch_id = " ";
@@ -1508,7 +859,6 @@ class Controller extends ChangeNotifier {
       Uri url = Uri.parse("https://trafiqerp.in/order/fj/get_area.php");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? br_id1 = prefs.getString("br_id");
-
       String branch_id;
       if (br_id1 == null || br_id1 == " " || br_id1 == "null") {
         branch_id = " ";
@@ -1592,7 +942,6 @@ class Controller extends ChangeNotifier {
       print("accnt map ${map}");
       await OrderAppDB.instance
           .deleteFromTableCommonQuery("accountHeadsTable", "");
-
       for (var ahead in map) {
         print("ahead------${ahead}");
         accountHead = AccountHead.fromJson(ahead);
@@ -2474,9 +1823,10 @@ class Controller extends ChangeNotifier {
   }
 
   //////////////////staff log details insertion//////////////////////
-  insertStaffLogDetails(String sid, String sname, String datetime,int track) async {
-    var logdata =
-        await OrderAppDB.instance.insertStaffLoignDetails(sid, sname, datetime,track);
+  insertStaffLogDetails(
+      String sid, String sname, String datetime, int track) async {
+    var logdata = await OrderAppDB.instance
+        .insertStaffLoignDetails(sid, sname, datetime, track);
     notifyListeners();
   }
 
@@ -5015,83 +4365,6 @@ class Controller extends ChangeNotifier {
     notifyListeners();
   }
 
-  getpresentloc() async {
-    pres_place = Placemark();
-    pres_lati = 0.0;
-    pres_longi = 0.0;
-    notifyListeners();
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        Fluttertoast.showToast(msg: 'Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      Fluttertoast.showToast(
-          msg:
-              'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    try {
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      pres_place = placemarks[0];
-      pres_lati = position.latitude;
-      pres_longi = position.longitude;
-      notifyListeners();
-    } catch (e) {}
-  }
-
-  Future<int> checkDistance(String custID) async {
-    try {
-      checkdistLoading=true;
-      notifyListeners();
-      await getpresentloc();
-      var res = await selectSettings("set_code in('DIS_VALUE')");
-      var res1 = await OrderAppDB.instance.select_Lati_Longi(custID);
-      print("cusID=====$custID");
-      print("set value result= ${settingsList1[0]['set_value']}");
-      double dislimit = double.parse(settingsList1[0]['set_value']);
-      print("dislimit= ${dislimit}");
-      print("get lat ----$res1");
-      List getlat = res1;
-      cust_lat = getlat[0]['la'].toString();
-      cust_longi = getlat[0]['lo'].toString();
-      notifyListeners();
-      print("cust_lat----$cust_lat,$cust_longi");
-      print("Present latLong----$pres_lati,$pres_longi");
-      double distanceInMeters = Geolocator.distanceBetween(pres_lati,
-          pres_longi, double.parse(cust_lat), double.parse(cust_longi));
-      print("Distance in meters=======$distanceInMeters");
-      if (distanceInMeters < dislimit) {
-        print("$distanceInMeters, $dislimit");
-         checkdistLoading=false;
-      notifyListeners();
-        return 1;
-      } else {
-         checkdistLoading=false;
-         notifyListeners();
-        return 0;
-      }
-    } catch (e) {
-       checkdistLoading=false;
-      notifyListeners();
-      return 3;
-    }
-  }
-
   setDate(String date1, String date2) {
     fromDate = date1;
     todate = date2;
@@ -5472,5 +4745,770 @@ class Controller extends ChangeNotifier {
     //           );
     notifyListeners();
   }
-  
+
+  /////////////////////////////////UPDATION BY SREYA MAY 2024///////////////////
+
+/////////////...........tO mARK staff location.........////////////
+  marklocation(BuildContext context, String custid, String type) async {
+    int y = 0;
+    loma = Text("");
+    notifyListeners();
+    //cust_lat,cust_longi
+    try {
+      lomaLoad = true;
+      notifyListeners();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? sid = prefs.getString("sid");
+      String? cid = prefs.getString("cid");
+      String? fp = prefs.getString("fp");
+      String? com = prefs.getString("company_id");
+      // prefs.setString("company_id", company_code);
+      print("cid , sid====$cid,$sid");
+      var result = await OrderAppDB.instance
+          .selectMarkLocDateTable(sid.toString(), custid.toString());
+      if (result.length > 0) {
+        print("datetim res=$result");
+        DateTime now = DateTime.now();
+        String datenow = DateFormat('dd-MM-yyyy').format(now);
+        // String originalDateString = result[0]['datetim'];
+        // DateTime dateqry1 = DateTime.parse(originalDateString);
+        // String dateqry = DateFormat('dd-MM-yyyy').format(dateqry1);
+        // print("dateqry===${dateqry.toString()} ,");
+        for (int i = 0; i < result.length; i++) {
+          String originalDateString = result[i]['datetim'].toString().trim();
+          print("originalDateString: $originalDateString");
+          DateTime dateqry1 = DateTime.parse(originalDateString);
+          print("dateqry1: $dateqry1");
+          String dateqry = DateFormat('dd-MM-yyyy').format(dateqry1);
+          print("dateqry: $dateqry , $datenow");
+          if (dateqry.toString() == datenow.toString()) {
+            y = 1;
+            notifyListeners();
+            break;
+          }
+        }
+      } else {
+        if (y == 0) {
+          print("YES");
+          bool serviceEnabled;
+          LocationPermission permission;
+
+          serviceEnabled = await Geolocator.isLocationServiceEnabled();
+          if (!serviceEnabled) {
+            Fluttertoast.showToast(msg: 'Please enable Your Location Service');
+          }
+
+          permission = await Geolocator.checkPermission();
+          if (permission == LocationPermission.denied) {
+            permission = await Geolocator.requestPermission();
+            if (permission == LocationPermission.denied) {
+              Fluttertoast.showToast(msg: 'Location permissions are denied');
+            }
+          }
+
+          if (permission == LocationPermission.deniedForever) {
+            Fluttertoast.showToast(
+                msg:
+                    'Location permissions are permanently denied, we cannot request permissions.');
+          }
+
+          Position position = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+          try {
+            List<Placemark> placemarks = await placemarkFromCoordinates(
+                position.latitude, position.longitude);
+            Placemark place = placemarks[0];
+
+            DateTime now = DateTime.now();
+            String datetoday = DateFormat('dd-MM-yyyy').format(DateTime.now());
+            currentposition = position;
+
+            await OrderAppDB.instance.marklocationDetailsTable(
+                fp,
+                sid,
+                custid,
+                now.toString(),
+                position.latitude.toString(),
+                position.longitude.toString(),
+                cust_lat.toString(),
+                cust_longi.toString(),
+                type,
+                "",
+                place.street.toString(),
+                0);
+            print("inserted to markloc DB");
+
+            NetConnection.networkConnection(context, "").then((value) async {
+              if (value == true) {
+                try {
+                  var result =
+                      await OrderAppDB.instance.selectmarkLocationTable();
+                  print("res 0${result[0]}");
+                  if (result[1].length > 0) {
+                    // isUpload = true;
+                    String jsonE = jsonEncode(result[1]);
+                    var jsonDe = jsonDecode(jsonE);
+                    print("jsonLoc--${jsonDe}");
+                    for (int i = 0; i < result[0].length; i++) {
+                      for (var item in jsonDe) {
+                        String idd = result[0][i]['id'].toString();
+                        print("idd $idd");
+                        var jsonString = jsonEncode(item);
+                        print("jsonstring=$jsonString");
+
+                        Uri url = Uri.parse(
+                            "https://trafiqerp.in/order/fj/mark_location.php");
+                        Map body = {'cid': cid, 'rm': jsonString};
+                        // ignore: avoid_print
+                        print("Mark loc body----$body");
+                        // isLoading = true;
+                        // notifyListeners();
+                        http.Response response = await http.post(
+                          url,
+                          body: body,
+                        );
+                        var map = jsonDecode(response.body);
+                        if (map != null) {
+                          print("Mark loc mp----$map");
+                          var result = await OrderAppDB.instance
+                              .updatMarkLocationTable(int.parse(idd));
+                          loma = Text("Location Marked!!!",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue));
+                          notifyListeners();
+                          // CustomSnackbar snackbar = CustomSnackbar();
+                          // snackbar.showSnackbar(
+                          //     context, "Location Marked!!!", "");
+                          // OrderAppDB.instance.updatLocationTable(item['id']);
+                        }
+                      }
+                    }
+                  }
+                  lomaLoad = false;
+                  notifyListeners();
+                } catch (e) {
+                  lomaLoad = false;
+                  notifyListeners();
+                  print(e);
+                }
+              } else {
+                lomaLoad = false;
+                notifyListeners();
+                // await OrderAppDB.instance.locationDetailsTable(
+                //     currentAddress.toString(),
+                //     sid.toString(),
+                //     fp.toString(),
+                //     now.toString(),
+                //     place.street.toString(),
+                //     place.locality.toString(),
+                //     place.postalCode.toString(),
+                //     place.administrativeArea.toString(),
+                //     place.country.toString(),
+                //     place.hashCode.toString(),
+                //     place.isoCountryCode.toString(),
+                //     place.name.toString(),
+                //     place.subAdministrativeArea.toString(),
+                //     place.subLocality.toString(),
+                //     position.latitude.toString(),
+                //     position.longitude.toString(),
+                //     activty,
+                //     0);
+                // print("Inserted to loc table");
+              }
+            });
+          } catch (e) {
+            print(e);
+          }
+        } else {
+          lomaLoad = false;
+          loma = Text("");
+          notifyListeners();
+          print("NO");
+          CustomSnackbar snackbar = CustomSnackbar();
+          snackbar.showSnackbar(context, "Location Already Marked.!", "");
+        }
+      }
+    } catch (e) {}
+  }
+
+  /////////////...........Upload marked location when internet available.........////////////
+  uploadLocation(BuildContext context) {
+    NetConnection.networkConnection(context, "").then((value) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? sid = prefs.getString("sid");
+      String? fp = prefs.getString("fp");
+      DateTime now = DateTime.now();
+      String datetoday = DateFormat('dd-MM-yyyy').format(DateTime.now());
+      if (value == true) {
+        try {
+          var result = await OrderAppDB.instance.selectLocationTable();
+          if (result.length > 0) {
+            // isUpload = true;
+            String jsonE = jsonEncode(result);
+            var jsonDe = jsonDecode(jsonE);
+            print("jsonLoc--${jsonDe}");
+            for (var item in jsonDe) {
+              Uri url = Uri.parse("https://trafiqerp.in/rapi/save_loct.php");
+              Map body = {
+                'location_info': item['location_info'],
+                'user_id': item['user_id'],
+                'device_info': item['device_info'],
+                'l_date': item['l_date'],
+                'Street': item['street'],
+                'Locality': item['locality'],
+                'PostalCode': item['postalCode'],
+                'AdministrativeArea': item['administrativeArea'],
+                'Country': item['country'],
+                'HashCode': item['hashCod'],
+                'ISOCountryCode': item['iSOCountryCode'],
+                'Name': item['name'],
+                'SubAdministrativeArea': item['subAdministrativeArea'],
+                'SubLocality': item['subLocality'],
+                'latitude': item['latitude'],
+                'longitude': item['longitude'],
+                'activity': item['activity'],
+              };
+              // ignore: avoid_print
+              print("loc body----$body");
+              // isLoading = true;
+              // notifyListeners();
+              http.Response response = await http.post(
+                url,
+                body: body,
+              );
+
+              var map = jsonDecode(response.body);
+              if (map != null) {
+                OrderAppDB.instance.updatLocationTable(item['id']);
+              }
+            }
+          }
+        } catch (e) {
+          print(e);
+        }
+      }
+    });
+
+    OrderAppDB.instance.selectLocationTable();
+  }
+
+/////////////...........Save staff login,periodically,logout location.........////////////
+  location(
+      String place,
+      String datetime,
+      String datetoday,
+      String street,
+      String local,
+      String post,
+      String adminarea,
+      String cntry,
+      String hash,
+      String isocode,
+      String name,
+      String subadmin,
+      String sublocal,
+      String lati,
+      String longi,
+      String activity) async {
+    // NetConnection.networkConnection(context).then((value) async {
+    //   if (value == true) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? fp = prefs.getString("fp");
+    String? sid = prefs.getString("sid");
+
+    try {
+      Uri url = Uri.parse("https://trafiqerp.in/rapi/save_loct.php");
+      Map body = {
+        'location_info': place,
+        'user_id': sid,
+        'device_info': fp,
+        'l_date': datetime,
+        'Street': street,
+        'Locality': local,
+        'PostalCode': post,
+        'AdministrativeArea': adminarea,
+        'Country': cntry,
+        'HashCode': hash,
+        'ISOCountryCode': isocode,
+        'Name': name,
+        'SubAdministrativeArea': subadmin,
+        'SubLocality': sublocal,
+        'latitude': lati,
+        'longitude': longi,
+        'activity': activity,
+      };
+      // ignore: avoid_print
+      print("loc body----$body");
+      // isLoading = true;
+      // notifyListeners();
+      http.Response response = await http.post(
+        url,
+        body: body,
+      );
+      // print("body $body");
+
+      var map = jsonDecode(response.body);
+      if (map != null) {
+        print("location map----$map");
+        await OrderAppDB.instance.locationDetailsTable(
+            place,
+            sid.toString(),
+            fp.toString(),
+            datetime,
+            street,
+            local,
+            post,
+            adminarea,
+            cntry,
+            hash,
+            isocode,
+            name,
+            subadmin,
+            sublocal,
+            lati,
+            longi,
+            activity,
+            1);
+        print("Inserted to loc table after api insert");
+      } else {
+        await OrderAppDB.instance.locationDetailsTable(
+            place,
+            sid.toString(),
+            fp.toString(),
+            datetime,
+            street,
+            local,
+            post,
+            adminarea,
+            cntry,
+            hash,
+            isocode,
+            name,
+            subadmin,
+            sublocal,
+            lati,
+            longi,
+            activity,
+            0);
+        print("Inserted to loc table after api insert fail");
+      }
+      // ignore: avoid_print
+
+      // await locationHistory(datetoday);
+      notifyListeners();
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return null;
+    }
+  }
+
+/////////////...........check if location already Marked.........////////////
+  selectmarked(BuildContext context, String custid) async {
+    print("selentry");
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? sid = prefs.getString("sid");
+      marked = " ";
+      locMarkLoading = true;
+      notifyListeners();
+
+      var result = await OrderAppDB.instance
+          .selectMarkLocDateTable(sid.toString(), custid.toString());
+      if (result.length > 0) {
+        print("datetim res=$result");
+        DateTime now = DateTime.now();
+        String datenow = DateFormat('dd-MM-yyyy').format(now);
+
+        for (int i = 0; i < result.length; i++) {
+          String originalDateString = result[i]['datetim'].toString().trim();
+          print("originalDateString: $originalDateString");
+
+          DateTime dateqry1 = DateTime.parse(originalDateString);
+          print("dateqry1: $dateqry1");
+
+          String dateqry = DateFormat('dd-MM-yyyy').format(dateqry1);
+          print("dateqry: $dateqry , $datenow");
+          if (dateqry.toString().trim() == datenow.toString().trim()) {
+            locMarkLoading = false;
+            marked = "Location Already Marked";
+            loma = Text("");
+
+            notifyListeners();
+            // print("selentryloo[] $marked");
+            break;
+          }
+        }
+      } else {
+        marked = " ";
+        // loma=" ";
+        lomaLoad = false;
+        locMarkLoading = false;
+        // notifyListeners();
+        //  print("selentryloo" " $marked");
+        notifyListeners();
+      }
+
+      print("selentryloo[] $marked");
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  /////////////...........function to obtain current location.........////////////
+  getpresentloc() async {
+    pres_place = Placemark();
+    pres_lati = 0.0;
+    pres_longi = 0.0;
+    notifyListeners();
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(
+          msg:
+              'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      pres_place = placemarks[0];
+      pres_lati = position.latitude;
+      pres_longi = position.longitude;
+      notifyListeners();
+    } catch (e) {}
+  }
+
+/////////////...........Check distnce btwn custmrloc and stafflocation.........////////////
+  Future<int> checkDistance(String custID) async {
+    try {
+      checkdistLoading = true;
+      notifyListeners();
+      await getpresentloc();
+      var res = await selectSettings("set_code in('DIS_VALUE')");
+      var res1 = await OrderAppDB.instance.select_Lati_Longi(custID);
+      print("cusID=====$custID");
+      print("set value result= ${settingsList1[0]['set_value']}");
+      double dislimit = double.parse(settingsList1[0]['set_value']);
+      print("dislimit= ${dislimit}");
+      print("get lat ----$res1");
+      List getlat = res1;
+      cust_lat = getlat[0]['la'].toString();
+      cust_longi = getlat[0]['lo'].toString();
+      notifyListeners();
+      print("cust_lat----$cust_lat,$cust_longi");
+      print("Present latLong----$pres_lati,$pres_longi");
+      double distanceInMeters = Geolocator.distanceBetween(pres_lati,
+          pres_longi, double.parse(cust_lat), double.parse(cust_longi));
+      print("Distance in meters=======$distanceInMeters");
+      if (distanceInMeters < dislimit) {
+        print("$distanceInMeters, $dislimit");
+        checkdistLoading = false;
+        notifyListeners();
+        return 1;
+      } else {
+        checkdistLoading = false;
+        notifyListeners();
+        return 0;
+      }
+    } catch (e) {
+      checkdistLoading = false;
+      notifyListeners();
+      return 3;
+    }
+  }
+
+  sortDistance() async {
+    List listLoc = [];
+    var res1 = await OrderAppDB.instance.select_lalo_cusid();
+    if (res1 != null) {
+      // List l = res1;
+      listLoc = [
+        {"la": 11.8708693, "lo": 75.4016164, "ac_code": "VGMHD76"}, //nandilath
+        {"la": 11.8684147, "lo": 75.3654717, "ac_code": "VGMHD3"},
+        {"la": 11.8753148, "lo": 75.3741409, "ac_code": "VGMHD77"}, //caltex
+        {
+          "la": 11.7501094,
+          "lo": 75.4942345,
+          "ac_code": 'VGMHD50'
+        }, //thalasery new
+        {"la": 11.8744156, "lo": 75.3828181, 'ac_code': "VGMHD24"}, //thana jctn
+      ];
+      notifyListeners();
+      print("Listttttt  $listLoc");
+    }
+    await getpresentloc();
+    for (int i = 0; i < listLoc.length; i++) {
+      double d1 = listLoc[i]["la"];
+      double d2 = listLoc[i]["lo"];
+      print("d111111111111$pres_lati, $pres_longi");
+      print("ddddddddlistt$d1, $d2");
+      double distanceInMeters =
+          Geolocator.distanceBetween(pres_lati, pres_longi, d1, d2);
+      print("distnace in meter ${distanceInMeters.toStringAsFixed(2)}");
+    }
+  }
+
+/////////////...........Clear location marked msg.........////////////
+  clearLOMarkText() {
+    print("clearedLOMA");
+    loma = Text(" ");
+    marked = " ";
+    notifyListeners();
+  }
+
+/////////////...........clear cutmr location marked msg.........////////////
+  clearCUSMarkText() {
+    print("clearedLOMA");
+    cusMark = Text(" ");
+    notifyListeners();
+  }
+
+  /////////////...........Add location of customer.........////////////
+  mark_custLoc(BuildContext context, String custid) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    determineLoad = true;
+    notifyListeners();
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(
+          msg:
+              'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    try {
+      cusMarkLoad = true;
+      notifyListeners();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      String? cid = prefs.getString("cid");
+
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      NetConnection.networkConnection(context, "").then((value) async {
+        await OrderAppDB.instance.upadteCommonQuery(
+            'accountHeadsTable',
+            "la='${position.latitude}',lo='${position.longitude}'",
+            "ac_code='${custid}'");
+
+        Uri url =
+            Uri.parse("https://trafiqerp.in/order/fj/mark_cust_location.php");
+
+        Map body = {
+          'cid': cid,
+          'cust_id': custid,
+          'latitude': position.latitude.toString(),
+          'longitude': position.longitude.toString()
+        };
+        http.Response response = await http.post(
+          url,
+          body: body,
+        );
+        print("bodymarkCustLOc ${body}");
+        var map = jsonDecode(response.body);
+        if (map != null) {
+          cusMarkLoad = false;
+
+          cusMark = Text("Customer Location Marked!!!",
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue));
+          notifyListeners();
+        } else {
+          cusMarkLoad = false;
+          cusMark = Text("Try again!!!",
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red));
+          notifyListeners();
+        }
+
+        print("map markCustLOc ${map}");
+      });
+    } catch (e) {
+      cusMarkLoad = false;
+      notifyListeners();
+      print(e);
+    }
+  }
+
+  Future determinePosition(BuildContext context, String activty) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    determineLoad = true;
+    notifyListeners();
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(
+          msg:
+              'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+
+      DateTime now = DateTime.now();
+      String datetoday = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+      currentposition = position;
+      if (activty == "LoginPunch") {
+        String formattedTime12Hour = DateFormat('hh:mm:ss a').format(now);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('loginTime', formattedTime12Hour);
+        notifyListeners();
+        print("logtime---------------$formattedTime12Hour");
+        loginTime = formattedTime12Hour;
+        notifyListeners();
+      }
+
+      print("Street :${place.street}");
+      print("Locality :${place.locality}");
+      print("PostalCode :${place.postalCode}");
+      print("AdministrativeArea :${place.administrativeArea}");
+      print("Country :${place.country}");
+      print("HashCode :${place.hashCode}");
+      print("ISOCountryCode :${place.isoCountryCode}");
+      print("Name :${place.name}");
+      print("SubAdministrativeArea :${place.subAdministrativeArea}");
+      print("SubLocality :${place.subLocality}");
+      print("SubThoroughfare :${place.subThoroughfare}");
+      print("Thoroughfare :${place.thoroughfare}");
+
+      currentAddress =
+          "${place.name}, ${place.locality} - ${place.postalCode}, ${place.administrativeArea}";
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('CurAdrs', currentAddress);
+      notifyListeners();
+      setpl(currentAddress, context);
+
+      NetConnection.networkConnection(context, "").then((value) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? sid = prefs.getString("sid");
+        String? fp = prefs.getString("fp");
+        if (value == true) {
+          try {
+            print(
+                "position.latitude, position.longitude========${position.latitude}, ${position.longitude}");
+
+            location(
+                currentAddress.toString(),
+                "$now",
+                datetoday,
+                "${place.street}",
+                "${place.locality}",
+                "${place.postalCode}",
+                "${place.administrativeArea}",
+                "${place.country}",
+                "${place.hashCode}",
+                "${place.isoCountryCode}",
+                "${place.name}",
+                "${place.subAdministrativeArea}",
+                "${place.subLocality}",
+                "${position.latitude}",
+                "${position.longitude}",
+                activty);
+            determineLoad = false;
+            notifyListeners();
+          } catch (e) {
+            print(e);
+          }
+        } else {
+          await OrderAppDB.instance.locationDetailsTable(
+              currentAddress.toString(),
+              sid.toString(),
+              fp.toString(),
+              now.toString(),
+              place.street.toString(),
+              place.locality.toString(),
+              place.postalCode.toString(),
+              place.administrativeArea.toString(),
+              place.country.toString(),
+              place.hashCode.toString(),
+              place.isoCountryCode.toString(),
+              place.name.toString(),
+              place.subAdministrativeArea.toString(),
+              place.subLocality.toString(),
+              position.latitude.toString(),
+              position.longitude.toString(),
+              activty,
+              0);
+          determineLoad = false;
+          notifyListeners();
+          print("Inserted to loc table");
+        }
+      });
+    } catch (e) {
+      determineLoad = false;
+      notifyListeners();
+      print(e);
+    }
+  }
+
+  setpl(String pll, BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? cAdr = prefs.getString('CurAdrs');
+    pl = Text(
+      cAdr!,
+      style: GoogleFonts.aBeeZee(
+        textStyle: Theme.of(context).textTheme.bodyLarge,
+        fontSize: 13,
+      ),
+    );
+    notifyListeners();
+  }
 }
