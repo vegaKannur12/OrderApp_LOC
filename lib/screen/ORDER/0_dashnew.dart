@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:marsproducts/CUSTOMER/add_cus_location.dart';
+import 'package:marsproducts/CUSTOMER/view_route.dart';
 import 'package:marsproducts/components/autocomplete.dart';
 import 'package:marsproducts/components/commoncolor.dart';
 import 'package:marsproducts/components/customToast.dart';
@@ -369,6 +370,23 @@ case "CL":
           Provider.of<Controller>(context, listen: false)
               .clearCUSMarkText();});
           return AddCustomerLOC(
+            type: "drawer call",
+            msg: "",
+            br_length: 0,
+          );
+        }
+        case "VR":
+        { 
+          // Provider.of<Controller>(context, listen: false)
+          //     .sortDistance();
+              // setState(() {
+                
+              // });
+        //    WidgetsBinding.instance
+        // .addPostFrameCallback((_) {
+          
+              // });
+          return ViewRoute(
             type: "drawer call",
             msg: "",
             br_length: 0,
@@ -884,6 +902,24 @@ case "CL":
                         },
                         title: Text(
                           "Customer Location",
+                          style: GoogleFonts.aBeeZee(
+                            // textStyle: Theme.of(context).textTheme.bodyText2,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        trailing: Icon(Icons.route),
+                        onTap: () async {
+                        //  Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => AddCustomerLOC()),
+                        //     );
+                          _onSelectItem(0, "VR");
+                        },
+                        title: Text(
+                          "View Route",
                           style: GoogleFonts.aBeeZee(
                             // textStyle: Theme.of(context).textTheme.bodyText2,
                             fontSize: 17,

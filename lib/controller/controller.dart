@@ -323,6 +323,10 @@ class Controller extends ChangeNotifier {
   double pres_longi = 0.0;
   String? marked;
   Placemark pres_place = Placemark();
+  List<Map> kmSortedlist = [];
+  List<List<Map<String, dynamic>>> routelist = [];
+  List<Map<String, dynamic>> routeflatList =[];
+       
 
 //////////////////////////////REGISTRATION ///////////////////////////
   Future<RegistrationData?> postRegistration(
@@ -369,7 +373,7 @@ class Controller extends ChangeNotifier {
           print("fp----- $fp");
           print("sof----${sof}");
           if (sof == "1") {
-            if (appType == 'SM') {
+            if (appType == 'VO') {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.setString("company_id", company_code);
               /////////////// insert into local db /////////////////////
@@ -5240,35 +5244,74 @@ class Controller extends ChangeNotifier {
 
   sortDistance() async {
     List listLoc = [];
+    List<Map> kmlist = [];
+    kmSortedlist.clear();
+    routelist.clear();
+    notifyListeners();
+
     var res1 = await OrderAppDB.instance.select_lalo_cusid();
+    print("res1 $res1");
     if (res1 != null) {
       // List l = res1;
-      listLoc = [
-        {"la": 11.8708693, "lo": 75.4016164, "ac_code": "VGMHD76"}, //nandilath
-        {"la": 11.8684147, "lo": 75.3654717, "ac_code": "VGMHD3"},
-        {"la": 11.8753148, "lo": 75.3741409, "ac_code": "VGMHD77"}, //caltex
-        {
-          "la": 11.7501094,
-          "lo": 75.4942345,
-          "ac_code": 'VGMHD50'
-        }, //thalasery new
-        {"la": 11.8744156, "lo": 75.3828181, 'ac_code': "VGMHD24"}, //thana jctn
-      ];
+      listLoc = res1;
+      // [
+      //   {"la": 11.8708693, "lo": 75.4016164, "ac_code": "VGMHD76"}, //nandilath
+      //   {"la": 11.8684147, "lo": 75.3654717, "ac_code": "VGMHD3"},
+      //   {"la": 11.8753148, "lo": 75.3741409, "ac_code": "VGMHD77"}, //caltex
+      //   {
+      //     "la": 11.7501094,
+      //     "lo": 75.4942345,
+      //     "ac_code": 'VGMHD50'
+      //   }, //thalasery new
+      //   {"la": 11.8744156, "lo": 75.3828181, 'ac_code': "VGMHD24"}, //thana jctn
+      // ];
       notifyListeners();
       print("Listttttt  $listLoc");
-    }
-    await getpresentloc();
-    for (int i = 0; i < listLoc.length; i++) {
-      double d1 = listLoc[i]["la"];
-      double d2 = listLoc[i]["lo"];
-      print("d111111111111$pres_lati, $pres_longi");
-      print("ddddddddlistt$d1, $d2");
-      double distanceInMeters =
-          Geolocator.distanceBetween(pres_lati, pres_longi, d1, d2);
-      print("distnace in meter ${distanceInMeters.toStringAsFixed(2)}");
+
+      await getpresentloc();
+      for (int i = 0; i < listLoc.length; i++) {
+        if(listLoc[i]["la"].isNotEmpty){
+           double d1 = double.parse(listLoc[i]["la"]);
+        double d2 = double.parse(listLoc[i]["lo"]);
+        String ac = listLoc[i]["ac_code"];
+        double distanceInMeters =
+            Geolocator.distanceBetween(pres_lati, pres_longi, d1, d2);
+        double distinKM = distanceInMeters / 1000;
+        kmSortedlist.add({"ACCODE": ac, "KM": distinKM});
+        notifyListeners();
+
+        }
+        else{
+          print("noooooooooooooooo");
+        }
+       
+      }
+
+      kmSortedlist.sort((a, b) => a["KM"].compareTo(b["KM"]));
+      print("KMLIST SORTED== $kmSortedlist");
+      notifyListeners();
+      //  var res1 = await OrderAppDB.instance.select_lalo_cusid();
+      for (var item in kmSortedlist) {
+        var res1 = await OrderAppDB.instance.select_Lati_Longi(item['ACCODE']);
+        if (res1 != null) {
+          for (var item in res1) {
+            routelist.add(res1);
+          }
+        }
+        notifyListeners();
+      }
+     routeflatList =routelist
+            .expand((x) => x)
+            .toList();
+             notifyListeners();
+      print("routelist===$routelist");
+      print("routeFLATlist===$routeflatList");
     }
   }
+searchroute(String code){
+  print("coooooooo-----$code");
 
+}
 /////////////...........Clear location marked msg.........////////////
   clearLOMarkText() {
     print("clearedLOMA");

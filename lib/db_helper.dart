@@ -3358,7 +3358,7 @@ select_Lati_Longi(String code) async {
     print("code.......$code");
     Database db = await instance.database;
     var res = await db.rawQuery(
-        "SELECT la,lo FROM accountHeadsTable WHERE ac_code = '$code'");
+        "SELECT la,lo,hname FROM accountHeadsTable WHERE ac_code = '$code'");
     print("latitude,longitude result......$res");
     return res;
   }

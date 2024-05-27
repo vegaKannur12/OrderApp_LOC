@@ -57,8 +57,7 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
         backgroundColor: P_Settings.detailscolor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor:
-          Colors.white,
+          backgroundColor: Colors.white,
           //  P_Settings.wavecolor,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(6.0),
@@ -73,7 +72,8 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
           child: Consumer<Controller>(builder: (context, values, child) {
             return Form(
               key: _formKey,
-              child: SizedBox(  height: size.height * 0.7,
+              child: SizedBox(
+                height: size.height * 0.7,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -96,15 +96,16 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                             if (value.text.isEmpty) {
                               return [];
                             } else {
-                              print("values.areDetails----${values.areDetails}");
+                              print(
+                                  "values.areDetails----${values.areDetails}");
                               return values.areDetails.where((suggestion) =>
                                   suggestion["aname"]
                                       .toLowerCase()
                                       .contains(value.text.toLowerCase()));
                             }
                           },
-                          displayStringForOption: (Map<String, dynamic> option) =>
-                              option["aname"],
+                          displayStringForOption:
+                              (Map<String, dynamic> option) => option["aname"],
                           onSelected: (value) {
                             setState(() {
                               _selectedItemarea = value["aname"];
@@ -118,7 +119,7 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                 _selectedAreaId!,
                                 _selectedItemarea!,
                               ];
-                
+
                               print("hjkkllsjm----$_selectedAreaId");
                               print(
                                   "${Provider.of<Controller>(context, listen: false).areaAutoComplete}");
@@ -127,7 +128,7 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                               Provider.of<Controller>(context, listen: false)
                                   .areaId = _selectedAreaId;
                               customertext.text = '';
-                
+
                               Provider.of<Controller>(context, listen: false)
                                   .getCustomer(_selectedAreaId);
                             });
@@ -145,19 +146,19 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 10),
-                
+
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                     borderSide: BorderSide(
-                                      color:
-                                          const Color.fromARGB(255, 199, 198, 198),
+                                      color: const Color.fromARGB(
+                                          255, 199, 198, 198),
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(25.0),
                                     borderSide: BorderSide(
-                                      color:
-                                          const Color.fromARGB(255, 199, 198, 198),
+                                      color: const Color.fromARGB(
+                                          255, 199, 198, 198),
                                       width: 1.0,
                                     ),
                                   ),
@@ -169,7 +170,7 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                       width: 3,
                                     ),
                                   ),
-                
+
                                   hintText: 'Area / Route',
                                   helperText: ' ', // th
                                   suffixIcon: IconButton(
@@ -190,7 +191,7 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                   return null;
                                 },
                                 textInputAction: TextInputAction.next,
-                
+
                                 controller: fieldText,
                                 focusNode: fieldFocusNode,
                                 style: TextStyle(
@@ -214,7 +215,8 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                     shrinkWrap: true,
                                     padding: const EdgeInsets.all(2.0),
                                     itemCount: options.length,
-                                    itemBuilder: (BuildContext context, int index) {
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
                                       final Map<String, dynamic> option =
                                           options.elementAt(index);
                                       print("option----$option");
@@ -226,7 +228,8 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                             print(
                                                 "optionaid------${option["aid"]}");
                                           },
-                                          title: Text(option["aname"].toString(),
+                                          title: Text(
+                                              option["aname"].toString(),
                                               style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black)),
@@ -275,7 +278,8 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                     setState(() {
                                       print("value----$value");
                                       _selectedItemcus = value["hname"];
-                                      customerName = value["hname"].toUpperCase();
+                                      customerName =
+                                          value["hname"].toUpperCase();
                                       custmerId = value["ac_code"];
                                       print("Code .........---$custmerId");
                                       Provider.of<Controller>(context,
@@ -297,7 +301,7 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(
                                               vertical: 10, horizontal: 10),
-                
+
                                           focusedBorder: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(25.0),
@@ -317,7 +321,8 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                           ),
                                           border: OutlineInputBorder(
                                             gapPadding: 0.3,
-                                            borderRadius: BorderRadius.circular(20),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                             borderSide: const BorderSide(
                                               color: Colors.black,
                                               width: 3,
@@ -330,15 +335,17 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                             onPressed: () {
                                               print(
                                                   "szfjzjfnjd------$_selectedAreaId");
-                
+
                                               print(
                                                   "values.custmerDetails-----------${values.custmerDetails}");
-                
+
                                               showModalBottomSheet<void>(
                                                 context: context,
-                                                builder: (BuildContext context) {
+                                                builder:
+                                                    (BuildContext context) {
                                                   return Container(
-                                                    height: values.custmerDetails
+                                                    height: values
+                                                            .custmerDetails
                                                             .isNotEmpty
                                                         ? MediaQuery.of(context)
                                                                 .size
@@ -368,8 +375,7 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                                                               context);
                                                                         },
                                                                         icon: const Icon(
-                                                                            Icons
-                                                                                .close))
+                                                                            Icons.close))
                                                                   ],
                                                                 )
                                                               : Container(),
@@ -379,9 +385,10 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                                                       .custmerDetails
                                                                       .isNotEmpty
                                                               ? const Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          top: 0.0),
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                              top: 0.0),
                                                                   child: Text(
                                                                     'Customers',
                                                                     style: TextStyle(
@@ -401,89 +408,70 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                                           values.custmerDetails
                                                                   .isNotEmpty
                                                               ? Expanded(
-                                                                  child: Padding(
-                                                                      padding:
-                                                                          const EdgeInsets
+                                                                  child:
+                                                                      Padding(
+                                                                          padding: const EdgeInsets
                                                                               .only(
                                                                               left:
                                                                                   10,
                                                                               top:
                                                                                   3),
-                                                                      child: ListView
-                                                                          .builder(
-                                                                        itemCount: values
-                                                                            .custmerDetails
-                                                                            .length,
-                                                                        itemBuilder:
-                                                                            (context,
-                                                                                index) {
-                                                                          return ListTile(
-                                                                            trailing:
-                                                                                const Icon(Icons.arrow_circle_right_rounded),
-                                                                            onTap:
-                                                                                () {
-                                                                              // WidgetsBinding
-                                                                              //     .instance
-                                                                              //     .addPostFrameCallback((_) {
-                                                                              //   Provider.of<Controller>(context, listen: false).getBalance(
-                                                                              //       cid,
-                                                                              //       values.custmerDetails[index]['ac_code']!,
-                                                                              //       context);
-                                                                              //   Provider.of<Controller>(context, listen: false).selectmarked(context,
-                                                                              //       custmerId.toString());
-                                                                              // });
-                                                                              setState(
-                                                                                  () {
-                                                                                customertext.text =
-                                                                                    values.custmerDetails[index]['hname'];
-                                                                                custmerId =
-                                                                                    values.custmerDetails[index]['ac_code'];
-                                                                              });
-                                                                              FocusManager
-                                                                                  .instance
-                                                                                  .primaryFocus
-                                                                                  ?.unfocus();
-                                                                              // Provider.of<Controller>(context, listen: false).setCustomerName(values.custmerDetails[index]['hname']);
-                                                                              // Navigator.of(context).push(
-                                                                              //   PageRouteBuilder(
-                                                                              //     opaque: false, // set to false
-                                                                              //     pageBuilder: (_, __, ___) => OrderForm(widget.areaname, "sales"),
-                                                                              //   ),
-                                                                              // );
-                                                                              //      customerName =
-                                                                              // values.custmerDetails[index]
-                                                                              //     ['hname'];
-                                                                              print(
-                                                                                  "customer name.......${Provider.of<Controller>(context, listen: false).customer_Name}");
-                                                                              Navigator.pop(
-                                                                                  context);
+                                                                          child:
+                                                                              ListView.builder(
+                                                                            itemCount:
+                                                                                values.custmerDetails.length,
+                                                                            itemBuilder:
+                                                                                (context, index) {
+                                                                              return ListTile(
+                                                                                trailing: const Icon(Icons.arrow_circle_right_rounded),
+                                                                                onTap: () {
+                                                                                  // WidgetsBinding
+                                                                                  //     .instance
+                                                                                  //     .addPostFrameCallback((_) {
+                                                                                  //   Provider.of<Controller>(context, listen: false).getBalance(
+                                                                                  //       cid,
+                                                                                  //       values.custmerDetails[index]['ac_code']!,
+                                                                                  //       context);
+                                                                                  //   Provider.of<Controller>(context, listen: false).selectmarked(context,
+                                                                                  //       custmerId.toString());
+                                                                                  // });
+                                                                                  setState(() {
+                                                                                    customertext.text = values.custmerDetails[index]['hname'];
+                                                                                    custmerId = values.custmerDetails[index]['ac_code'];
+                                                                                  });
+                                                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                                                                  // Provider.of<Controller>(context, listen: false).setCustomerName(values.custmerDetails[index]['hname']);
+                                                                                  // Navigator.of(context).push(
+                                                                                  //   PageRouteBuilder(
+                                                                                  //     opaque: false, // set to false
+                                                                                  //     pageBuilder: (_, __, ___) => OrderForm(widget.areaname, "sales"),
+                                                                                  //   ),
+                                                                                  // );
+                                                                                  //      customerName =
+                                                                                  // values.custmerDetails[index]
+                                                                                  //     ['hname'];
+                                                                                  print("customer name.......${Provider.of<Controller>(context, listen: false).customer_Name}");
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                                                                textColor: P_Settings.wavecolor,
+                                                                                title: Text(
+                                                                                  "${values.custmerDetails[index]['hname']}",
+                                                                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                                                                ),
+
+                                                                                // onTap: (() {
+                                                                                //   print("selected index");
+                                                                                // }),
+                                                                              );
                                                                             },
-                                                                            visualDensity: const VisualDensity(
-                                                                                horizontal:
-                                                                                    -4,
-                                                                                vertical:
-                                                                                    -4),
-                                                                            textColor:
-                                                                                P_Settings.wavecolor,
-                                                                            title:
-                                                                                Text(
-                                                                              "${values.custmerDetails[index]['hname']}",
-                                                                              style: const TextStyle(
-                                                                                  fontSize: 13,
-                                                                                  fontWeight: FontWeight.bold),
-                                                                            ),
-                
-                                                                            // onTap: (() {
-                                                                            //   print("selected index");
-                                                                            // }),
-                                                                          );
-                                                                        },
-                                                                      )),
+                                                                          )),
                                                                 )
                                                               : Text(
                                                                   "No Customer Found!!!",
                                                                   style: TextStyle(
-                                                                      fontSize: 17,
+                                                                      fontSize:
+                                                                          17,
                                                                       color: P_Settings
                                                                           .extracolor),
                                                                 ),
@@ -521,7 +509,8 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                             ? customertext
                                             : fieldText,
                                         scrollPadding: EdgeInsets.only(
-                                            bottom: topInsets + size.height * 0.34),
+                                            bottom:
+                                                topInsets + size.height * 0.34),
                                         focusNode: fieldFocusNode,
                                         style: TextStyle(
                                             fontSize: 12,
@@ -532,7 +521,8 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                   },
                                   optionsMaxHeight: size.height * 0.02,
                                   optionsViewBuilder: (BuildContext context,
-                                      AutocompleteOnSelected<Map<String, dynamic>>
+                                      AutocompleteOnSelected<
+                                              Map<String, dynamic>>
                                           onSelected,
                                       Iterable<Map<String, dynamic>> options) {
                                     return Align(
@@ -544,12 +534,13 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                           child: ListView.builder(
                                             padding: const EdgeInsets.all(10.0),
                                             itemCount: options.length,
-                                            itemBuilder:
-                                                (BuildContext context, int index) {
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
                                               //      print(
                                               // "option----${options}");
                                               print("index----$index");
-                                              final Map<String, dynamic> option =
+                                              final Map<String, dynamic>
+                                                  option =
                                                   options.elementAt(index);
                                               print("option----$option");
                                               return SizedBox(
@@ -572,7 +563,8 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                                                     //     option["code"];
                                                   },
                                                   title: Text(
-                                                      option["hname"].toString(),
+                                                      option["hname"]
+                                                          .toString(),
                                                       style: const TextStyle(
                                                           fontSize: 15,
                                                           color: Colors.black)),
@@ -605,8 +597,10 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              print("custmerId.toString()${custmerId.toString()}");
-                              await Provider.of<Controller>(context, listen: false)
+                              print(
+                                  "custmerId.toString()${custmerId.toString()}");
+                              await Provider.of<Controller>(context,
+                                      listen: false)
                                   .mark_custLoc(context, custmerId.toString());
                             }
                           },

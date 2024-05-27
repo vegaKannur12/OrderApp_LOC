@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
@@ -85,8 +86,11 @@ class _MainDashboardState extends State<MainDashboard> {
     // initPlatformState();
     print("init");
     sharedPref();
+     SchedulerBinding.instance.addPostFrameCallback((_) {
+     Provider.of<Controller>(context, listen: false)
+              .sortDistance();
     Provider.of<Controller>(context, listen: false)
-        .selectSettings("set_code in ('DEFAULT_CUST_CODE') ");
+        .selectSettings("set_code in ('DEFAULT_CUST_CODE') ");});
     // String? gen_area = Provider.of<Controller>(context, listen: false).areaId;
     // print("gen area----$gen_area");
     // if (gen_area != null) {
