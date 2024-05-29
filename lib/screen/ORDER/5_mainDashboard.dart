@@ -86,11 +86,11 @@ class _MainDashboardState extends State<MainDashboard> {
     // initPlatformState();
     print("init");
     sharedPref();
-     SchedulerBinding.instance.addPostFrameCallback((_) {
-     Provider.of<Controller>(context, listen: false)
-              .sortDistance();
-    Provider.of<Controller>(context, listen: false)
-        .selectSettings("set_code in ('DEFAULT_CUST_CODE') ");});
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Provider.of<Controller>(context, listen: false).sortDistance();
+      Provider.of<Controller>(context, listen: false)
+          .selectSettings("set_code in ('DEFAULT_CUST_CODE') ");
+    });
     // String? gen_area = Provider.of<Controller>(context, listen: false).areaId;
     // print("gen area----$gen_area");
     // if (gen_area != null) {
@@ -175,36 +175,6 @@ class _MainDashboardState extends State<MainDashboard> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Text(
-                                    " - ${value.sname?.toUpperCase()}",
-                                    style: GoogleFonts.aBeeZee(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        color: Colors.grey[600],
-                                        fontStyle: FontStyle.italic,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 13),
-                                    // style: TextStyle(
-                                    //     fontSize: 14,
-                                    //     fontWeight: FontWeight.bold,
-                                    //     color: P_Settings.collection1,
-                                    //     fontStyle: FontStyle.italic),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: Text(
-                                      "( ${widget.logtime} )",
-                                      style: GoogleFonts.aBeeZee(
-                                          textStyle: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              Color.fromARGB(255, 40, 97, 143)),
-                                    ),
-                                  ),
                                 ],
                               ),
 
@@ -220,6 +190,38 @@ class _MainDashboardState extends State<MainDashboard> {
                               //  ],)
                             ],
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${value.sname?.toUpperCase()}",
+                              style: GoogleFonts.aBeeZee(
+                                  textStyle:
+                                      Theme.of(context).textTheme.bodyLarge,
+                                  color: Colors.grey[600],
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13),
+                              // style: TextStyle(
+                              //     fontSize: 14,
+                              //     fontWeight: FontWeight.bold,
+                              //     color: P_Settings.collection1,
+                              //     fontStyle: FontStyle.italic),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(
+                                "( ${widget.logtime} )",
+                                style: GoogleFonts.aBeeZee(
+                                    textStyle:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 40, 97, 143)),
+                              ),
+                            ),
+                          ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -297,7 +299,10 @@ class _MainDashboardState extends State<MainDashboard> {
                                 ),
                                 onTap: () async {
                                   Provider.of<Controller>(context,
-                                          listen: false).sortDistance(); ///TESTSORT
+                                          listen: false)
+                                      .sortDistance();
+
+                                  ///TESTSORT
                                   Provider.of<Controller>(context,
                                           listen: false)
                                       .clearLOMarkText();

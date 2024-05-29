@@ -142,13 +142,25 @@ class StaffLogin extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      const CircleAvatar(
-                                        backgroundColor: Colors.grey,
-                                        radius: 40,
-                                        child: Icon(
-                                          Icons.person,
-                                          color: Colors.white,
-                                          size: 50,
+                                      GestureDetector(onLongPress: () async {
+                                           List<Map<String, dynamic>> list =
+                                          await OrderAppDB.instance
+                                              .getListOfTables();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TableList(list: list)),
+                                      );
+                                      },
+                                        child: const CircleAvatar(
+                                          backgroundColor: Colors.grey,
+                                          radius: 40,
+                                          child: Icon(
+                                            Icons.person,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: size.height * 0.03),

@@ -52,7 +52,6 @@ class _CompanyDetailsState extends State<CompanyDetails> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     cid = prefs.getString("cid");
     versof = prefs.getString("versof");
-
     fingerprint = prefs.getString("fp");
     print("fingerprint-----$fingerprint");
     if (cid != null) {

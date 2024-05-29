@@ -1079,6 +1079,17 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                         ],
                                                                       ));
                                                                     });
+                                                              } else if (i ==
+                                                                  4) {
+                                                                CustomSnackbar
+                                                                    snk =
+                                                                    CustomSnackbar();
+                                                                snk.showSnackbar(
+                                                                    context,
+                                                                    "Add Customer Location",
+                                                                    "");
+                                                                print(
+                                                                    "Add Customer Location");
                                                               } else {
                                                                 CustomSnackbar
                                                                     snk =
@@ -1362,6 +1373,17 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                         ],
                                                                       ));
                                                                     });
+                                                              } else if (i ==
+                                                                  4) {
+                                                                CustomSnackbar
+                                                                    snk =
+                                                                    CustomSnackbar();
+                                                                snk.showSnackbar(
+                                                                    context,
+                                                                    "Add Customer Location",
+                                                                    "");
+                                                                print(
+                                                                    "Add Customer Location");
                                                               } else {
                                                                 CustomSnackbar
                                                                     snk =
@@ -1413,7 +1435,8 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                 prefs.getInt(
                                                                     'strak');
                                                             print(
-                                                                "trrrrrrrrrrrrrrrrr$tr");
+                                                                "trrrrrrrrrrrrrrrrr$tr"); // tr = 1 =>no tracking
+                                                                                          // tr = 0 =>tracking
                                                             if (_formKey
                                                                 .currentState!
                                                                 .validate()) {
@@ -1426,7 +1449,7 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                         context,
                                                                         custmerId
                                                                             .toString()!,
-                                                                        "3");
+                                                                        "3");   
                                                               } else {
                                                                 int i = await Provider.of<
                                                                             Controller>(
@@ -1438,7 +1461,8 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                             .toString());
                                                                 print(
                                                                     "1111111==$i");
-                                                                if (i == 1) {
+                                                                if (i == 1) //distance < DIS_VALUE in settings
+                                                                {                       
                                                                   Provider.of<Controller>(
                                                                           context,
                                                                           listen:
@@ -1447,9 +1471,10 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                           context,
                                                                           custmerId
                                                                               .toString()!,
-                                                                          "0");
-                                                                } else if (i ==
-                                                                    0) {
+                                                                          "3");
+                                                                } 
+                                                                else if (i == 0)
+                                                                {
                                                                   print("no");
                                                                   showDialog(
                                                                       barrierDismissible:
@@ -1481,20 +1506,32 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                           ],
                                                                         ));
                                                                       });
-                                                                } else {
+                                                                } else if (i ==
+                                                                    4) {
                                                                   CustomSnackbar
                                                                       snk =
                                                                       CustomSnackbar();
                                                                   snk.showSnackbar(
                                                                       context,
-                                                                      "Check Permissions",
+                                                                      "Add Customer Location",
                                                                       "");
                                                                   print(
-                                                                      "check permissions");
+                                                                      "Add Customer Location");
+                                                                } 
+                                                                else 
+                                                                {
+                                                                  CustomSnackbar
+                                                                      snk =
+                                                                      CustomSnackbar();
+                                                                  snk.showSnackbar(
+                                                                      context,
+                                                                      "Check Network/Permissions",
+                                                                      "");
+                                                                  print(
+                                                                      "check Network/Permissions");
                                                                 }
                                                               }
                                                             }
-
                                                             // if (_formKey
                                                             //     .currentState!
                                                             //     .validate()) {

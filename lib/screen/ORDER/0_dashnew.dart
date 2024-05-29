@@ -1027,8 +1027,8 @@ case "CL":
                 child: Container(
                   child: _getDrawerItemWidget(
                       Provider.of<Controller>(context, listen: false)
-                          .menu_index!,
-                      size),
+                          .menu_index,
+                      size), //dash
                 ),
               );
             }).toList(),

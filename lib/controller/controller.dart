@@ -325,8 +325,7 @@ class Controller extends ChangeNotifier {
   Placemark pres_place = Placemark();
   List<Map> kmSortedlist = [];
   List<List<Map<String, dynamic>>> routelist = [];
-  List<Map<String, dynamic>> routeflatList =[];
-       
+  List<Map<String, dynamic>> routeflatList = [];
 
 //////////////////////////////REGISTRATION ///////////////////////////
   Future<RegistrationData?> postRegistration(
@@ -419,6 +418,7 @@ class Controller extends ChangeNotifier {
                   for (var item in map["br"]) {
                     branch_List.add(item);
                   }
+                  print("brnchid$bagList");
                   br_length = branch_List.length;
                   // buildPopupDialog(context);
                 }
@@ -764,6 +764,7 @@ class Controller extends ChangeNotifier {
         branch_id = br_id1;
       }
       Map body = {'cid': cid, 'br_id': branch_id};
+      print("bodystaff$body");
       isDownloaded = true;
       isCompleted = true;
       if (page != "company details") {
@@ -863,6 +864,7 @@ class Controller extends ChangeNotifier {
       Uri url = Uri.parse("https://trafiqerp.in/order/fj/get_area.php");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? br_id1 = prefs.getString("br_id");
+      print("brrr===$br_id1");
       String branch_id;
       if (br_id1 == null || br_id1 == " " || br_id1 == "null") {
         branch_id = " ";
@@ -882,7 +884,7 @@ class Controller extends ChangeNotifier {
         url,
         body: body,
       );
-      print("body ${body}");
+      print("bodyarea ${body}");
       List map = jsonDecode(response.body);
       print("maparea ${map}");
       await OrderAppDB.instance
@@ -943,32 +945,39 @@ class Controller extends ChangeNotifier {
       );
       print("body ${body}");
       List map = jsonDecode(response.body);
-      print("accnt map ${map}");
-      await OrderAppDB.instance
-          .deleteFromTableCommonQuery("accountHeadsTable", "");
-      for (var ahead in map) {
-        print("ahead------${ahead}");
-        accountHead = AccountHead.fromJson(ahead);
-        var account = await OrderAppDB.instance.insertAccoundHeads(accountHead);
-      }
+      if (map.isNotEmpty) {
+        print("accnt map ${map}");
+        await OrderAppDB.instance
+            .deleteFromTableCommonQuery("accountHeadsTable", "");
+        for (var ahead in map) {
+          print("ahead------${ahead}");
+          accountHead = AccountHead.fromJson(ahead);
+          var account =
+              await OrderAppDB.instance.insertAccoundHeads(accountHead);
+        }
 
-      String? us = await prefs.getString('st_username');
-      String? pwd = await prefs.getString('st_pwd');
-      if (us != null && pwd != null) {
-        if (areaidFrompopup != null) {
-          dashboardSummery(sid!, s, areaidFrompopup!, context);
-        } else {
-          if (userType == "staff") {
-            print("satfff");
-            dashboardSummery(sid!, s, "", context);
+        String? us = await prefs.getString('st_username');
+        String? pwd = await prefs.getString('st_pwd');
+        if (us != null && pwd != null) {
+          if (areaidFrompopup != null) {
+            dashboardSummery(sid!, s, areaidFrompopup!, context);
+          } else {
+            if (userType == "staff") {
+              print("satfff");
+              dashboardSummery(sid!, s, "", context);
+            }
           }
         }
-      }
-      isDownloaded = false;
-      isDown[index] = true;
-      isLoading = false;
+        isDownloaded = false;
+        isDown[index] = true;
+        isLoading = false;
 
-      notifyListeners();
+        notifyListeners();
+      } else {
+        isLoading = false;
+
+        notifyListeners();
+      }
 
       // return accountHead;
     } catch (e) {
@@ -1007,19 +1016,25 @@ class Controller extends ChangeNotifier {
           await OrderAppDB.instance
               .deleteFromTableCommonQuery("walletTable", "");
           var map = jsonDecode(response.body);
-          print("map ${map}");
-          WalletModal walletModal;
-          // walletModal.
-          for (var item in map) {
-            walletModal = WalletModal.fromJson(item);
-            await OrderAppDB.instance.insertwalletTable(walletModal);
-            // menuList.add(menuItem);
-          }
-          isDownloaded = false;
-          isDown[index] = true;
-          isLoading = false;
+          if (map.isNotEmpty) {
+            print("map ${map}");
+            WalletModal walletModal;
+            // walletModal.
+            for (var item in map) {
+              walletModal = WalletModal.fromJson(item);
+              await OrderAppDB.instance.insertwalletTable(walletModal);
+              // menuList.add(menuItem);
+            }
+            isDownloaded = false;
+            isDown[index] = true;
+            isLoading = false;
 
-          notifyListeners();
+            notifyListeners();
+          } else {
+            isLoading = false;
+
+            notifyListeners();
+          }
         } catch (e) {
           print(e);
           return null;
@@ -1209,17 +1224,22 @@ class Controller extends ChangeNotifier {
           .deleteFromTableCommonQuery("productDetailsTable", "");
       // print("body ${body}");
       List map = jsonDecode(response.body);
-      print("productDetailsTable--map ${map}");
-      for (var pro in map) {
-        proDetails = ProductDetails.fromJson(pro);
-        var product =
-            await OrderAppDB.instance.insertProductDetails(proDetails);
-      }
-      isDownloaded = false;
-      isDown[index] = true;
+      if (map.isNotEmpty) {
+        print("productDetailsTable--map ${map}");
+        for (var pro in map) {
+          proDetails = ProductDetails.fromJson(pro);
+          var product =
+              await OrderAppDB.instance.insertProductDetails(proDetails);
+        }
+        isDownloaded = false;
+        isDown[index] = true;
 
-      isLoading = false;
-      notifyListeners();
+        isLoading = false;
+        notifyListeners();
+      } else {
+        isLoading = false;
+        notifyListeners();
+      }
       /////////////// insert into local db /////////////////////
     } catch (e) {
       print(e);
@@ -1363,17 +1383,22 @@ class Controller extends ChangeNotifier {
       await OrderAppDB.instance
           .deleteFromTableCommonQuery("productsCategory", "");
       List map = jsonDecode(response.body);
-      print("map ${map}");
-      ProductsCategoryModel category;
-      for (var cat in map) {
-        category = ProductsCategoryModel.fromJson(cat);
-        var product = await OrderAppDB.instance.insertProductCategory(category);
-        isDownloaded = false;
-        isDown[index] = true;
+      if (map.isNotEmpty) {
+        print("mapprodCat ${map}");
+        ProductsCategoryModel category;
+        for (var cat in map) {
+          category = ProductsCategoryModel.fromJson(cat);
+          var product =
+              await OrderAppDB.instance.insertProductCategory(category);
+          isDownloaded = false;
+          isDown[index] = true;
+          isLoading = false;
+          notifyListeners();
+        }
+        // print("inserted ${account}");
+      } else {
         isLoading = false;
         notifyListeners();
-
-        // print("inserted ${account}");
       }
       /////////////// insert into local db /////////////////////
       // notifyListeners();
@@ -1411,17 +1436,22 @@ class Controller extends ChangeNotifier {
       await OrderAppDB.instance.deleteFromTableCommonQuery("companyTable", "");
       // print("body ${body}");
       List map = jsonDecode(response.body);
-      print("map ${map}");
-      ProductCompanymodel productCompany;
-      for (var proComp in map) {
-        productCompany = ProductCompanymodel.fromJson(proComp);
-        var product =
-            await OrderAppDB.instance.insertProductCompany(productCompany);
+      if (map.isNotEmpty) {
+        print("map ${map}");
+        ProductCompanymodel productCompany;
+        for (var proComp in map) {
+          productCompany = ProductCompanymodel.fromJson(proComp);
+          var product =
+              await OrderAppDB.instance.insertProductCompany(productCompany);
+        }
+        isDownloaded = false;
+        isDown[index] = true;
+        isLoading = false;
+        notifyListeners();
+      } else {
+        isLoading = false;
+        notifyListeners();
       }
-      isDownloaded = false;
-      isDown[index] = true;
-      isLoading = false;
-      notifyListeners();
       /////////////// insert into local db /////////////////////
     } catch (e) {
       print(e);
@@ -1457,16 +1487,22 @@ class Controller extends ChangeNotifier {
       await OrderAppDB.instance.deleteFromTableCommonQuery("productUnits", "");
       // print("body ${body}");
       List map = jsonDecode(response.body);
-      print("productUnits  --- ${map}");
-      ProductUnitsModel productUnits;
-      for (var prounit in map) {
-        productUnits = ProductUnitsModel.fromJson(prounit);
-        var product = await OrderAppDB.instance.insertProductUnit(productUnits);
+      if (map.isNotEmpty) {
+        print("productUnits  --- ${map}");
+        ProductUnitsModel productUnits;
+        for (var prounit in map) {
+          productUnits = ProductUnitsModel.fromJson(prounit);
+          var product =
+              await OrderAppDB.instance.insertProductUnit(productUnits);
+        }
+        isDownloaded = false;
+        isDown[index] = true;
+        isLoading = false;
+        notifyListeners();
+      } else {
+        isLoading = false;
+        notifyListeners();
       }
-      isDownloaded = false;
-      isDown[index] = true;
-      isLoading = false;
-      notifyListeners();
       /////////////// insert into local db /////////////////////
     } catch (e) {
       print(e);
@@ -4754,7 +4790,7 @@ class Controller extends ChangeNotifier {
 
 /////////////...........tO mARK staff location.........////////////
   marklocation(BuildContext context, String custid, String type) async {
-    int y = 0;
+    int y = 0; // type =3 =>no order ,1 =>order,2 => collection
     loma = Text("");
     notifyListeners();
     //cust_lat,cust_longi
@@ -5211,29 +5247,36 @@ class Controller extends ChangeNotifier {
       await getpresentloc();
       var res = await selectSettings("set_code in('DIS_VALUE')");
       var res1 = await OrderAppDB.instance.select_Lati_Longi(custID);
-      print("cusID=====$custID");
-      print("set value result= ${settingsList1[0]['set_value']}");
-      double dislimit = double.parse(settingsList1[0]['set_value']);
-      print("dislimit= ${dislimit}");
-      print("get lat ----$res1");
-      List getlat = res1;
-      cust_lat = getlat[0]['la'].toString();
-      cust_longi = getlat[0]['lo'].toString();
-      notifyListeners();
-      print("cust_lat----$cust_lat,$cust_longi");
-      print("Present latLong----$pres_lati,$pres_longi");
-      double distanceInMeters = Geolocator.distanceBetween(pres_lati,
-          pres_longi, double.parse(cust_lat), double.parse(cust_longi));
-      print("Distance in meters=======$distanceInMeters");
-      if (distanceInMeters < dislimit) {
-        print("$distanceInMeters, $dislimit");
-        checkdistLoading = false;
+      if (res1[0]['la'].toString().isNotEmpty &&
+          res1[0]['lo'].toString().isNotEmpty) {
+        print("cusID=====$custID");
+        print("set value result= ${settingsList1[0]['set_value']}");
+        double dislimit = double.parse(settingsList1[0]['set_value']);
+        print("dislimit= ${dislimit}");
+        print("get lat ----$res1");
+        List getlat = res1;
+        cust_lat = getlat[0]['la'].toString();
+        cust_longi = getlat[0]['lo'].toString();
         notifyListeners();
-        return 1;
+        print("cust_lat----$cust_lat,$cust_longi");
+        print("Present latLong----$pres_lati,$pres_longi");
+        double distanceInMeters = Geolocator.distanceBetween(pres_lati,
+            pres_longi, double.parse(cust_lat), double.parse(cust_longi));
+        print("Distance in meters=======$distanceInMeters");
+        if (distanceInMeters < dislimit) {
+          print("$distanceInMeters, $dislimit");
+          checkdistLoading = false;
+          notifyListeners();
+          return 1; 
+        } else {
+          checkdistLoading = false;
+          notifyListeners();
+          return 0;
+        }
       } else {
         checkdistLoading = false;
         notifyListeners();
-        return 0;
+        return 4;
       }
     } catch (e) {
       checkdistLoading = false;
@@ -5270,21 +5313,18 @@ class Controller extends ChangeNotifier {
 
       await getpresentloc();
       for (int i = 0; i < listLoc.length; i++) {
-        if(listLoc[i]["la"].isNotEmpty){
-           double d1 = double.parse(listLoc[i]["la"]);
-        double d2 = double.parse(listLoc[i]["lo"]);
-        String ac = listLoc[i]["ac_code"];
-        double distanceInMeters =
-            Geolocator.distanceBetween(pres_lati, pres_longi, d1, d2);
-        double distinKM = distanceInMeters / 1000;
-        kmSortedlist.add({"ACCODE": ac, "KM": distinKM});
-        notifyListeners();
-
-        }
-        else{
+        if (listLoc[i]["la"].isNotEmpty) {
+          double d1 = double.parse(listLoc[i]["la"]);
+          double d2 = double.parse(listLoc[i]["lo"]);
+          String ac = listLoc[i]["ac_code"];
+          double distanceInMeters =
+              Geolocator.distanceBetween(pres_lati, pres_longi, d1, d2);
+          double distinKM = distanceInMeters / 1000;
+          kmSortedlist.add({"ACCODE": ac, "KM": distinKM});
+          notifyListeners();
+        } else {
           print("noooooooooooooooo");
         }
-       
       }
 
       kmSortedlist.sort((a, b) => a["KM"].compareTo(b["KM"]));
@@ -5300,18 +5340,17 @@ class Controller extends ChangeNotifier {
         }
         notifyListeners();
       }
-     routeflatList =routelist
-            .expand((x) => x)
-            .toList();
-             notifyListeners();
+      routeflatList = routelist.expand((x) => x).toList();
+      notifyListeners();
       print("routelist===$routelist");
       print("routeFLATlist===$routeflatList");
     }
   }
-searchroute(String code){
-  print("coooooooo-----$code");
 
-}
+  searchroute(String code) {
+    print("coooooooo-----$code");
+  }
+
 /////////////...........Clear location marked msg.........////////////
   clearLOMarkText() {
     print("clearedLOMA");
