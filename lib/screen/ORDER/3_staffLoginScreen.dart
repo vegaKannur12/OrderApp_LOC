@@ -142,17 +142,18 @@ class StaffLogin extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      GestureDetector(onLongPress: () async {
-                                           List<Map<String, dynamic>> list =
-                                          await OrderAppDB.instance
-                                              .getListOfTables();
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TableList(list: list)),
-                                      );
-                                      },
+                                      GestureDetector(
+                                        onLongPress: () async {
+                                          List<Map<String, dynamic>> list =
+                                              await OrderAppDB.instance
+                                                  .getListOfTables();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TableList(list: list)),
+                                          );
+                                        },
                                         child: const CircleAvatar(
                                           backgroundColor: Colors.grey,
                                           radius: 40,
@@ -297,7 +298,8 @@ class StaffLogin extends StatelessWidget {
                                                           'st_pwd', pwd);
                                                       await prefs.setInt(
                                                           'strak', result[3]);
-                                                          print("result3=${result[3].toString()}");
+                                                      print(
+                                                          "no track(1),track(0)=${result[3].toString()}");
                                                       print(
                                                           "visible===${visible.value}");
                                                       Provider.of<Controller>(
@@ -306,7 +308,8 @@ class StaffLogin extends StatelessWidget {
                                                           .insertStaffLogDetails(
                                                               result[1],
                                                               controller1.text,
-                                                              date!,result[3]);
+                                                              date!,
+                                                              result[3]);
                                                       Provider.of<Controller>(
                                                               context,
                                                               listen: false)
@@ -318,21 +321,52 @@ class StaffLogin extends StatelessWidget {
                                                           null;
                                                       prefs.setBool(
                                                           "staffLog", true);
-                                                      await Provider.of<
-                                                                  Controller>(
-                                                              context,
-                                                              listen: false)
-                                                          .determinePosition(
-                                                              context,
-                                                              "LoginPunch");
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                Dashboard()),
-                                                      );
-                                                    }
 
+                                                      int? tr =
+                                                          prefs.getInt('strak');
+                                                      print(
+                                                          "trrrrrrrrrrrrrrrrr$tr");
+                                                      if (tr == 1) {
+                                                        print(
+                                                            "track cheyyanda"); // track cheyyanda
+                                                        String
+                                                            formattedTime12Hour =
+                                                            DateFormat(
+                                                                    'hh:mm:ss a')
+                                                                .format(now);
+                                                        SharedPreferences
+                                                            prefs =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        prefs.setString(
+                                                            'loginTime',
+                                                            formattedTime12Hour);
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  Dashboard()),
+                                                        );
+                                                      } else {
+                                                        print(
+                                                            "track cheyyanam");
+                                                        // track cheyyanam
+
+                                                        await Provider.of<
+                                                                    Controller>(
+                                                                context,
+                                                                listen: false)
+                                                            .determinePosition(
+                                                                context,
+                                                                "LoginPunch");
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  Dashboard()),
+                                                        );
+                                                      }
+                                                    }
                                                     //  await OrderAppDB.instance.getArea(controller1.text);
                                                   }
                                                 }

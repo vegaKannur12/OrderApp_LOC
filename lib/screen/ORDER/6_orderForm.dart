@@ -1436,7 +1436,7 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                     'strak');
                                                             print(
                                                                 "trrrrrrrrrrrrrrrrr$tr"); // tr = 1 =>no tracking
-                                                                                          // tr = 0 =>tracking
+                                                            // tr = 0 =>tracking
                                                             if (_formKey
                                                                 .currentState!
                                                                 .validate()) {
@@ -1449,7 +1449,7 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                         context,
                                                                         custmerId
                                                                             .toString()!,
-                                                                        "3");   
+                                                                        "3");
                                                               } else {
                                                                 int i = await Provider.of<
                                                                             Controller>(
@@ -1462,7 +1462,7 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                 print(
                                                                     "1111111==$i");
                                                                 if (i == 1) //distance < DIS_VALUE in settings
-                                                                {                       
+                                                                {
                                                                   Provider.of<Controller>(
                                                                           context,
                                                                           listen:
@@ -1470,11 +1470,10 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                       .marklocation(
                                                                           context,
                                                                           custmerId
-                                                                              .toString()!,
+                                                                              .toString(),
                                                                           "3");
-                                                                } 
-                                                                else if (i == 0)
-                                                                {
+                                                                } else if (i ==
+                                                                    0) {
                                                                   print("no");
                                                                   showDialog(
                                                                       barrierDismissible:
@@ -1507,7 +1506,8 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                         ));
                                                                       });
                                                                 } else if (i ==
-                                                                    4) {
+                                                                    4) 
+                                                                {
                                                                   CustomSnackbar
                                                                       snk =
                                                                       CustomSnackbar();

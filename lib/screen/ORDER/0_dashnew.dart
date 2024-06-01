@@ -35,6 +35,7 @@ import '../reports/upload_history.dart';
 import '../reports/upload_pending.dart';
 import '6_orderForm.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 class Dashboard extends StatefulWidget {
   String? type;
 
@@ -82,6 +83,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   Timer? timer;
   String? logtime;
   String? cAdr;
+  int? tr;
 
   _onSelectItem(int index, String? menu) {
     if (!mounted) return;
@@ -94,22 +96,22 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
     }
     Navigator.of(context).pop(); // close the drawer
   }
-clearingg()
-{
-  Provider.of<Controller>(context, listen: false).clearLOMarkText();
-}
+
+  clearingg() {
+    Provider.of<Controller>(context, listen: false).clearLOMarkText();
+  }
+
   @override
   void initState() {
     // Provider.of<Controller>(context, listen: false).postRegistration("RONPBQ9AD5D",context);
     // TODO: implement initState
     print("returned---");
     super.initState();
-     WidgetsBinding.instance
-        .addPostFrameCallback((_) {
-Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
-  clearingg();
-        });
-    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
+      clearingg();
+    });
+
     drawerOpts.clear();
     print(
         "menu from splash------${Provider.of<Controller>(context, listen: false).menu_index}");
@@ -153,16 +155,15 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
       }
       print("Selected Index: " + _tabController!.index.toString());
     });
-
-    timer = Timer.periodic(Duration(minutes: 5), (Timer t) {
-      print("Periodic Location------");
-
-      Provider.of<Controller>(context, listen: false).uploadLocation(context);
-      Provider.of<Controller>(context, listen: false)
-          .determinePosition(context, "Periodic");
+    if (tr == 0) {
+      timer = Timer.periodic(Duration(minutes: 5), (Timer t) {
+        print("Periodic Location------");
+        Provider.of<Controller>(context, listen: false).uploadLocation(context);
+        Provider.of<Controller>(context, listen: false)
+            .determinePosition(context, "Periodic");
+      } //  timerFun()
+          );
     }
-        //  timerFun()
-        );
   }
 
   navigateToPage(BuildContext context, Size size) {
@@ -178,14 +179,14 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
   //   await OrderAppDB.instance.deleteFromTableCommonQuery("settings", "");
   //   await OrderAppDB.instance.insertsettingsTable("rate Edit", 0);
   // }
-  getlogTime() async 
-  {
+  getlogTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     logtime = prefs.getString('loginTime');
-
+    tr = prefs.getInt('strak');
     cAdr = prefs.getString('CurAdrs');
-    print("LooooooogTime===place==${logtime.toString()} , ${cAdr.toString()}");
-     setState(() {});
+    print(
+        "LooooooogTime===place==trak==${logtime.toString()}, ${cAdr.toString()}, ${tr.toString()},");
+    setState(() {});
   }
 
   getCompaniId() async {
@@ -263,20 +264,22 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
 
           return new MainDashboard(
             context: context,
-            logtime: logtime.toString(),curAdr: cAdr.toString(),
-
+            logtime: logtime.toString(),
+            curAdr: cAdr.toString(),
           );
         }
-
       case "S2":
-        if (widget.type == "return from cartList") {
+        if (widget.type == "return from cartList") 
+        {
           return OrderForm(widget.areaName!, "sale order");
-        } else if (widget.type == "Product return confirmed") {
+        } 
+        else if (widget.type == "Product return confirmed") 
+        {
           return OrderForm(widget.areaName!, "");
-        } else {
+        } else 
+        {
           return OrderForm("", "");
         }
-
       case "S3":
         return OrderForm("", "return");
 
@@ -304,7 +307,6 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
               // os: os,
               );
         }
-
       case "A2":
         {
           getCompaniId();
@@ -321,7 +323,6 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
           return AdminDashboard();
           // return MainDashboard();
         }
-
       case "SA2":
         return null;
       case "SA3":
@@ -341,7 +342,6 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
             type: "drawer call",
           );
         }
-
       case "DP":
         {
           Provider.of<Controller>(context, listen: false)
@@ -352,7 +352,6 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
             context: context,
           );
         }
-
       case "CD":
         {
           Provider.of<Controller>(context, listen: false)
@@ -363,29 +362,28 @@ Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
             br_length: 0,
           );
         }
-case "CL":
+      case "CL":
         {
-           WidgetsBinding.instance
-        .addPostFrameCallback((_) {
-          Provider.of<Controller>(context, listen: false)
-              .clearCUSMarkText();});
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Provider.of<Controller>(context, listen: false).clearCUSMarkText();
+          });
           return AddCustomerLOC(
             type: "drawer call",
             msg: "",
             br_length: 0,
           );
         }
-        case "VR":
-        { 
+      case "VR":
+        {
           // Provider.of<Controller>(context, listen: false)
           //     .sortDistance();
-              // setState(() {
-                
-              // });
-        //    WidgetsBinding.instance
-        // .addPostFrameCallback((_) {
-          
-              // });
+          // setState(() {
+
+          // });
+          //    WidgetsBinding.instance
+          // .addPostFrameCallback((_) {
+
+          // });
           return ViewRoute(
             type: "drawer call",
             msg: "",
@@ -398,13 +396,17 @@ case "CL":
             // type: "drawer call",
             );
       case "0":
-        return MainDashboard(context: context, logtime: logtime.toString(),curAdr: cAdr.toString(),);
+        return MainDashboard(
+          context: context,
+          logtime: logtime.toString(),
+          curAdr: cAdr.toString(),
+        );
       case "1":
         {
           Provider.of<Controller>(context, listen: false).setDate(s[0], "");
           Provider.of<Controller>(context, listen: false)
               .todaySales(s[0], " ", "sale report");
-          return new SaleReport();
+          return SaleReport();
         }
       case "2":
         {
@@ -412,23 +414,22 @@ case "CL":
           Provider.of<Controller>(context, listen: false).setDate(s[0], "");
           Provider.of<Controller>(context, listen: false)
               .todaySales(s[0], " ", "upload history");
-          return new UploadHistory();
+          return UploadHistory();
         }
       case "3":
         {
           Provider.of<Controller>(context, listen: false).setDate(s[0], "");
           Provider.of<Controller>(context, listen: false)
               .todaySales(s[0], " ", "history pending");
-          return new UploadPending();
+          return UploadPending();
         }
       case "4":
         {
           Provider.of<Controller>(context, listen: false).setDate(s[0], "");
           Provider.of<Controller>(context, listen: false)
               .todaySales(s[0], " ", "");
-          return new TodaySale();
+          return TodaySale();
         }
-
       // case "1":
       //   {
       //     Provider.of<Controller>(context, listen: false).setDate(s[0], "");
@@ -443,7 +444,6 @@ case "CL":
               .todayCollection(s[0], "");
           return TodayCollection();
         }
-
       // case "3":
       //   {
       //     Provider.of<Controller>(context, listen: false).setDate(s[0], "");
@@ -893,11 +893,11 @@ case "CL":
                       ListTile(
                         trailing: Icon(Icons.add),
                         onTap: () async {
-                        //  Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => AddCustomerLOC()),
-                        //     );
+                          //  Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (context) => AddCustomerLOC()),
+                          //     );
                           _onSelectItem(0, "CL");
                         },
                         title: Text(
@@ -911,11 +911,11 @@ case "CL":
                       ListTile(
                         trailing: Icon(Icons.route),
                         onTap: () async {
-                        //  Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => AddCustomerLOC()),
-                        //     );
+                          //  Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (context) => AddCustomerLOC()),
+                          //     );
                           _onSelectItem(0, "VR");
                         },
                         title: Text(
@@ -1009,8 +1009,8 @@ case "CL":
                       //   ListTile(
                       //   title: Icon(Icons.route,color: Colors.blue,),
                       //   onTap: () async {
-                      //     _launchUrl();                      
-                      //   },                     
+                      //     _launchUrl();
+                      //   },
                       // ),
                     ],
                   ),
@@ -1036,12 +1036,16 @@ case "CL":
         ));
   }
 }
+
 Future<void> _launchUrl() async {
-  if (!await launchUrl(Uri.parse("https://trafiqerp.in/order/map_rute/index2.php?staff_id=VGMHD2"),
-  mode: LaunchMode.inAppWebView)) {
+  if (!await launchUrl(
+      Uri.parse(
+          "https://trafiqerp.in/order/map_rute/index2.php?staff_id=VGMHD2"),
+      mode: LaunchMode.inAppWebView)) {
     throw Exception('Could not launch ');
   }
 }
+
 Future<bool> _onBackPressed(BuildContext context) async {
   return await showDialog(
     context: context,
