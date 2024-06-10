@@ -1319,81 +1319,84 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                     'strak');
                                                             print(
                                                                 "trrrrrrrrrrrrrrrrr$tr");
-                                                            if (tr == 1) {
-                                                              addItemMethod(
-                                                                  oos, context);
-                                                            } else {
-                                                              int i = await Provider.of<
-                                                                          Controller>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .checkDistance(
-                                                                      custmerId
-                                                                          .toString());
-                                                              print(
-                                                                  "1111111=$i");
-                                                              if (i == 1) {
+                                                            if (_formKey
+                                                                .currentState!
+                                                                .validate()) {
+                                                              if (tr == 1) {
                                                                 addItemMethod(
                                                                     oos,
                                                                     context);
-                                                              } else if (i ==
-                                                                  0) {
-                                                                print("no");
-                                                                showDialog(
-                                                                    barrierDismissible:
-                                                                        false,
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (context) {
-                                                                      Future.delayed(
-                                                                          Duration(
-                                                                              seconds: 2),
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .pop(true);
-                                                                      });
-                                                                      return AlertDialog(
-                                                                          content:
-                                                                              Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.end,
-                                                                        children: [
-                                                                          Text(
-                                                                            'You are out of distance limit',
-                                                                            style:
-                                                                                TextStyle(color: P_Settings.extracolor),
-                                                                          ),
-                                                                          Icon(
-                                                                            Icons.dangerous_outlined,
-                                                                            color:
-                                                                                Colors.green,
-                                                                          )
-                                                                        ],
-                                                                      ));
-                                                                    });
-                                                              } else if (i ==
-                                                                  4) {
-                                                                CustomSnackbar
-                                                                    snk =
-                                                                    CustomSnackbar();
-                                                                snk.showSnackbar(
-                                                                    context,
-                                                                    "Add Customer Location",
-                                                                    "");
-                                                                print(
-                                                                    "Add Customer Location");
                                                               } else {
-                                                                CustomSnackbar
-                                                                    snk =
-                                                                    CustomSnackbar();
-                                                                snk.showSnackbar(
-                                                                    context,
-                                                                    "Check Permissions",
-                                                                    "");
+                                                                int i = await Provider.of<
+                                                                            Controller>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .checkDistance(
+                                                                        custmerId
+                                                                            .toString());
                                                                 print(
-                                                                    "check permissions");
+                                                                    "1111111=$i");
+                                                                if (i == 1) {
+                                                                  addItemMethod(
+                                                                      oos,
+                                                                      context);
+                                                                } else if (i ==
+                                                                    0) {
+                                                                  print(
+                                                                      "out of distance.!");
+                                                                  showDialog(
+                                                                      barrierDismissible:
+                                                                          false,
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) {
+                                                                        Future.delayed(
+                                                                            Duration(seconds: 2),
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop(true);
+                                                                        });
+                                                                        return AlertDialog(
+                                                                            content:
+                                                                                Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.end,
+                                                                          children: [
+                                                                            Text(
+                                                                              'You are out of distance limit',
+                                                                              style: TextStyle(color: P_Settings.extracolor),
+                                                                            ),
+                                                                            Icon(
+                                                                              Icons.dangerous_outlined,
+                                                                              color: Colors.green,
+                                                                            )
+                                                                          ],
+                                                                        ));
+                                                                      });
+                                                                } else if (i ==
+                                                                    4) {
+                                                                  CustomSnackbar
+                                                                      snk =
+                                                                      CustomSnackbar();
+                                                                  snk.showSnackbar(
+                                                                      context,
+                                                                      "Add Customer Location",
+                                                                      "");
+                                                                  print(
+                                                                      "Add Customer Location");
+                                                                } else {
+                                                                  CustomSnackbar
+                                                                      snk =
+                                                                      CustomSnackbar();
+                                                                  snk.showSnackbar(
+                                                                      context,
+                                                                      "Check Permissions",
+                                                                      "");
+                                                                  print(
+                                                                      "check permissions");
+                                                                }
                                                               }
                                                             }
                                                           },
@@ -1461,7 +1464,8 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                             .toString());
                                                                 print(
                                                                     "1111111==$i");
-                                                                if (i == 1) //distance < DIS_VALUE in settings
+                                                                if (i ==
+                                                                    1) //distance < DIS_VALUE in settings
                                                                 {
                                                                   Provider.of<Controller>(
                                                                           context,
@@ -1506,8 +1510,7 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                         ));
                                                                       });
                                                                 } else if (i ==
-                                                                    4) 
-                                                                {
+                                                                    4) {
                                                                   CustomSnackbar
                                                                       snk =
                                                                       CustomSnackbar();
@@ -1517,9 +1520,7 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                       "");
                                                                   print(
                                                                       "Add Customer Location");
-                                                                } 
-                                                                else 
-                                                                {
+                                                                } else {
                                                                   CustomSnackbar
                                                                       snk =
                                                                       CustomSnackbar();

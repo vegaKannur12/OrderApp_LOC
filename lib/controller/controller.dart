@@ -973,7 +973,7 @@ class Controller extends ChangeNotifier {
         isLoading = false;
 
         notifyListeners();
-      } else {
+      } else {isDownloaded = false;
         isLoading = false;
 
         notifyListeners();
@@ -1030,7 +1030,7 @@ class Controller extends ChangeNotifier {
             isLoading = false;
 
             notifyListeners();
-          } else {
+          } else {isDownloaded = false;
             isLoading = false;
 
             notifyListeners();
@@ -1236,7 +1236,7 @@ class Controller extends ChangeNotifier {
 
         isLoading = false;
         notifyListeners();
-      } else {
+      } else {isDownloaded = false;
         isLoading = false;
         notifyListeners();
       }
@@ -1397,6 +1397,7 @@ class Controller extends ChangeNotifier {
         }
         // print("inserted ${account}");
       } else {
+        isDownloaded = false;
         isLoading = false;
         notifyListeners();
       }
@@ -1449,6 +1450,7 @@ class Controller extends ChangeNotifier {
         isLoading = false;
         notifyListeners();
       } else {
+        isDownloaded = false;
         isLoading = false;
         notifyListeners();
       }
@@ -1500,6 +1502,7 @@ class Controller extends ChangeNotifier {
         isLoading = false;
         notifyListeners();
       } else {
+        isDownloaded = false;
         isLoading = false;
         notifyListeners();
       }
@@ -1870,7 +1873,6 @@ class Controller extends ChangeNotifier {
     notifyListeners();
   }
 
-//////////////////////////////////UPDATE ////////////////////
   /////////////////////////////updateqty/////////////////////
   updateQty(String qty, int cartrowno, String customerId, String rate) async {
     List<Map<String, dynamic>> res = await OrderAppDB.instance
@@ -1881,14 +1883,12 @@ class Controller extends ChangeNotifier {
       for (var item in res) {
         bagList.add(item);
       }
-
       notifyListeners();
       print("re from controller----$res");
     }
   }
 //////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////
   returnupdateQty(
       String qty, int cartrowno, String customerId, String rate) async {
     List<Map<String, dynamic>> res = await OrderAppDB.instance
@@ -1920,8 +1920,7 @@ class Controller extends ChangeNotifier {
     }
   }
 
-  /////////////////// SELECT //////////////////////
-  //////////////////////SELECT WALLET ////////////////////////////////////////////////////
+ //////////////////////SELECT WALLET ////////////////////////////////////////////////////
   fetchwallet() async {
     walletList.clear();
     var res = await OrderAppDB.instance

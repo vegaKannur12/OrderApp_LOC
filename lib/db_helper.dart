@@ -1179,7 +1179,6 @@ class OrderAppDB {
     }
   }
 
-
   ////////////////////insert to return table/////////////////////////////////
   Future insertreturnMasterandDetailsTable(
     String item,
@@ -1364,7 +1363,7 @@ class OrderAppDB {
 
 ////////////////////////staff login details table insert ////////////////
   Future insertStaffLoignDetails(
-      String sid, String sname, String datetime,int track) async {
+      String sid, String sname, String datetime, int track) async {
     final db = await database;
     var query2 =
         'INSERT INTO staffLoginDetailsTable(sid, sname, datetime,track) VALUES("${sid}", "${sname}", "${datetime}",$track)';
@@ -1424,7 +1423,7 @@ class OrderAppDB {
         sid = staff['sid'];
         sname = staff['sname'];
         result = "success";
-        strak=int.parse(staff['track'].toString());
+        strak = int.parse(staff['track'].toString());
         resultList.add(result);
         resultList.add(sid!);
         resultList.add(sname!);
@@ -1435,7 +1434,7 @@ class OrderAppDB {
         result = "failed";
         sid = "";
         sname = "";
-        strak=3;
+        strak = 3;
 
         // resultList.add(result);
         // resultList.add(sid);
@@ -1687,7 +1686,7 @@ class OrderAppDB {
       area = await db
           .rawQuery('SELECT area FROM staffDetailsTable WHERE sid="${sid}"');
 
-      areaidfromStaff = area[0]["area"];
+      areaidfromStaff = area[0]["area"]; // "1,2,3,4"
       // String str = areaidfromStaff.substring(0, areaidfromStaff.length - 1);
       String str = areaidfromStaff[areaidfromStaff.length - 1];
       if (str == ",") {
@@ -1733,16 +1732,19 @@ class OrderAppDB {
         list = await db.rawQuery(
             'SELECT  * FROM accountHeadsTable where area_id="$areaId"');
       }
-    } else if (areaId == null && areaidfromStaff != null) {
+    } 
+    else if (areaId == null && areaidfromStaff != null) 
+    {
       list = await db.query(
         'accountHeadsTable',
         where: "area_id IN (${aidsplit.join(',')})",
       );
-    } else {
+    } 
+    else 
+    {
       list = await db
           .rawQuery('SELECT  * FROM accountHeadsTable where area_id="$areaId"');
     }
-
     print("customr----${list.length}");
     return list;
   }
@@ -1797,7 +1799,6 @@ class OrderAppDB {
     return res;
   }
 
-  
   /////////////////////////max of from table//////////////////////
   // getMaxOfFieldValue(String os, String customerId) async {
   //   var res;
@@ -3302,9 +3303,8 @@ class OrderAppDB {
     }
   }
 
-
   ///////////...........Updation made by SREYA May2024......./////////////
-  
+
   Future locationDetailsTable(
       String loc,
       String uid,
@@ -3343,7 +3343,8 @@ class OrderAppDB {
       String? cust_lat,
       String? cust_lon,
       String? typ,
-      String? transid,String? locname,
+      String? transid,
+      String? locname,
       int? status) async {
     final db = await database;
     var res2;
@@ -3354,7 +3355,7 @@ class OrderAppDB {
     res2 = await db.rawInsert(query2);
   }
 
-select_Lati_Longi(String code) async {
+  select_Lati_Longi(String code) async {
     print("code.......$code");
     Database db = await instance.database;
     var res = await db.rawQuery(
@@ -3362,11 +3363,11 @@ select_Lati_Longi(String code) async {
     print("latitude,longitude result......$res");
     return res;
   }
+
   select_lalo_cusid() async {
     // print("code.......$code");
     Database db = await instance.database;
-    var res = await db.rawQuery(
-        "SELECT la,lo,ac_code FROM accountHeadsTable");
+    var res = await db.rawQuery("SELECT la,lo,ac_code FROM accountHeadsTable");
     print("latitude,longitude,ac_code result......$res");
     return res;
   }
@@ -3383,8 +3384,9 @@ select_Lati_Longi(String code) async {
     print("result Location status = 0----$res");
     return res;
   }
-  selectMarkLocDateTable(String stid,String ctid) async {
-  print("-----------------$stid, $ctid");
+
+  selectMarkLocDateTable(String stid, String ctid) async {
+    print("-----------------$stid, $ctid");
     Database db = await instance.database;
     var res = await db.rawQuery(
         "SELECT datetim FROM marklocationTable where staffid='$stid' and custid='$ctid'");
@@ -3398,10 +3400,12 @@ select_Lati_Longi(String code) async {
 
   selectmarkLocationTable() async {
     Database db = await instance.database;
-    var res1 = await db.rawQuery("SELECT id FROM marklocationTable  where marklocationTable.status==0");
-    var res = await db.rawQuery("SELECT fp,staffid,custid,datetim,punch_lat,punch_long,cust_lat,cust_long,type,trans_id,locname FROM  marklocationTable  where marklocationTable.status==0");
+    var res1 = await db.rawQuery(
+        "SELECT id FROM marklocationTable  where marklocationTable.status==0");
+    var res = await db.rawQuery(
+        "SELECT fp,staffid,custid,datetim,punch_lat,punch_long,cust_lat,cust_long,type,trans_id,locname FROM  marklocationTable  where marklocationTable.status==0");
     print("result MarkLocation----$res");
-    return [res1,res];
+    return [res1, res];
   }
 
   updatLocationTable(int id) async {
@@ -3411,14 +3415,12 @@ select_Lati_Longi(String code) async {
     print("Location update responsee----$id---$res");
     return res;
   }
+
   updatMarkLocationTable(int id) async {
     Database db = await instance.database;
-    var res =
-        await db.rawUpdate('UPDATE marklocationTable SET status=1 WHERE id=$id');
+    var res = await db
+        .rawUpdate('UPDATE marklocationTable SET status=1 WHERE id=$id');
     print("Mark Location update responsee----$id---$res");
     return res;
   }
-
-
-
 }

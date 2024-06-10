@@ -269,15 +269,11 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
           );
         }
       case "S2":
-        if (widget.type == "return from cartList") 
-        {
+        if (widget.type == "return from cartList") {
           return OrderForm(widget.areaName!, "sale order");
-        } 
-        else if (widget.type == "Product return confirmed") 
-        {
+        } else if (widget.type == "Product return confirmed") {
           return OrderForm(widget.areaName!, "");
-        } else 
-        {
+        } else {
           return OrderForm("", "");
         }
       case "S3":
@@ -375,8 +371,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         }
       case "VR":
         {
-          // Provider.of<Controller>(context, listen: false)
-          //     .sortDistance();
+          // Provider.of<Controller>(context, listen: false).sortDistance();
           // setState(() {
 
           // });

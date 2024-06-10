@@ -602,6 +602,9 @@ class _AddCustomerLOCState extends State<AddCustomerLOC> {
                               await Provider.of<Controller>(context,
                                       listen: false)
                                   .mark_custLoc(context, custmerId.toString());
+                                   Provider.of<Controller>(context,
+                                          listen: false)
+                                      .sortDistance();
                             }
                           },
                           style: ElevatedButton.styleFrom(
