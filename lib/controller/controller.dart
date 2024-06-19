@@ -4989,10 +4989,10 @@ class Controller extends ChangeNotifier {
             var jsonDe = jsonDecode(jsonE);
             print("jsonLoc--${jsonDe}");
             for (var item in jsonDe) {
-              Uri url = Uri.parse("https://trafiqerp.in/rapi/save_loct.php");
+              Uri url = Uri.parse("https://trafiqerp.in/order/fj/save_loct.php");
               Map body = {
                 'location_info': item['location_info'],
-                'user_id': item['user_id'],
+                'user_id': item['user_id'].toString(),
                 'device_info': item['device_info'],
                 'l_date': item['l_date'],
                 'Street': item['street'],
@@ -5008,6 +5008,7 @@ class Controller extends ChangeNotifier {
                 'latitude': item['latitude'],
                 'longitude': item['longitude'],
                 'activity': item['activity'],
+                'cid':cid
               };
               // ignore: avoid_print
               print("loc body----$body");
@@ -5056,12 +5057,13 @@ class Controller extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? fp = prefs.getString("fp");
     String? sid = prefs.getString("sid");
-
+    String? cid = prefs.getString("cid");
+    print("fp: $fp , sid :$sid, cid : $cid");
     try {
-      Uri url = Uri.parse("https://trafiqerp.in/rapi/save_loct.php");
+      Uri url = Uri.parse("https://trafiqerp.in/order/fj/save_loct.php");
       Map body = {
         'location_info': place,
-        'user_id': sid,
+        'user_id': sid.toString(),
         'device_info': fp,
         'l_date': datetime,
         'Street': street,
@@ -5077,6 +5079,7 @@ class Controller extends ChangeNotifier {
         'latitude': lati,
         'longitude': longi,
         'activity': activity,
+        'cid':cid
       };
       // ignore: avoid_print
       print("loc body----$body");

@@ -155,15 +155,17 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       }
       print("Selected Index: " + _tabController!.index.toString());
     });
-    if (tr == 0) {
-      timer = Timer.periodic(Duration(minutes: 5), (Timer t) {
+
+    print("tr :$tr");
+    timer = Timer.periodic(Duration(minutes: 5), (Timer t) {
+      if (tr == 0) {
         print("Periodic Location------");
         Provider.of<Controller>(context, listen: false).uploadLocation(context);
         Provider.of<Controller>(context, listen: false)
             .determinePosition(context, "Periodic");
-      } //  timerFun()
-          );
-    }
+      }
+    } //  timerFun()
+        );
   }
 
   navigateToPage(BuildContext context, Size size) {
