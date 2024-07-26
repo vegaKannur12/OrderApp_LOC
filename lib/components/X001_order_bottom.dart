@@ -311,7 +311,7 @@ class OrderBottomSheet {
                                     )
                                   : Padding(
                                       padding: const EdgeInsets.only(
-                                          top: 8.0, bottom: 8),
+                                          top: 8.0, bottom: 8,left: 15.0, right: 15),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -399,8 +399,8 @@ class OrderBottomSheet {
                                               backgroundColor: P_Settings.wavecolor,
                                             ),
                                             onPressed: () async {
+                                              
                                               int indexCalc = index + 1;
-
                                               int max = await OrderAppDB
                                                   .instance
                                                   .getMaxCommonQuery(

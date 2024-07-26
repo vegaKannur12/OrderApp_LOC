@@ -132,47 +132,47 @@ class _X001OrderItemSelectionState extends State<X001OrderItemSelection> {
                           ),
                         )),
                   ),
-                  Expanded(
-                    // width: size.width * 0.3,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange, // background
-                      ),
-                      onPressed: () {
-                        // print("haiOO");
-                        // print()
-                        if (value.bagList.isNotEmpty) {
-                          print("bbb${value.bagList}");
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                orderpopup.buildPopupDialog(
-                              "sale order",
-                              context,
-                              "Confirm your order?",
-                              widget.areaId,
-                              widget.areaName,
-                              widget.customerId,
-                              s[0],
-                              s[1],
-                              "",
-                              "",
-                              "",
-                            ),
-                          );
-                        }
-                      },
-                      child: Text(
-                        'Save',
-                        style: GoogleFonts.aBeeZee(
-                          // textStyle: Theme.of(context).textTheme.bodyText2,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: P_Settings.tableheadingColor,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   // width: size.width * 0.3,
+                  //   child: ElevatedButton(
+                  //     style: ElevatedButton.styleFrom(
+                  //       backgroundColor: Colors.orange, // background
+                  //     ),
+                  //     onPressed: () {
+                  //       // print("haiOO");
+                  //       // print()
+                  //       if (value.bagList.isNotEmpty) {
+                  //         print("bbb${value.bagList}");
+                  //         showDialog(
+                  //           context: context,
+                  //           builder: (BuildContext context) =>
+                  //               orderpopup.buildPopupDialog(
+                  //             "sale order",
+                  //             context,
+                  //             "Confirm your order?",
+                  //             widget.areaId,
+                  //             widget.areaName,
+                  //             widget.customerId,
+                  //             s[0],
+                  //             s[1],
+                  //             "",
+                  //             "",
+                  //             "",
+                  //           ),
+                  //         );
+                  //       }
+                  //     },
+                  //     child: Text(
+                  //       'Save',
+                  //       style: GoogleFonts.aBeeZee(
+                  //         // textStyle: Theme.of(context).textTheme.bodyText2,
+                  //         fontSize: 17,
+                  //         fontWeight: FontWeight.bold,
+                  //         color: P_Settings.tableheadingColor,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Expanded(
                     // width: size.width * 0.3,
                     child: ElevatedButton(

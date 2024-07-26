@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:marsproducts/components/commoncolor.dart';
 import 'package:marsproducts/controller/controller.dart';
 import 'package:marsproducts/db_helper.dart';
+import 'package:marsproducts/model/verify_registrationModel.dart';
 import 'package:marsproducts/screen/ADMIN_/adminController.dart';
 import 'package:marsproducts/screen/ORDER/0_dashnew.dart';
 import 'package:marsproducts/screen/ORDER/1_companyRegistrationScreen.dart';
@@ -35,14 +35,17 @@ class _SplashScreenState extends State<SplashScreen>
   bool? staffLog;
   String? dataFile;
   String? os;
+  VerifyRegistration verregmodel = VerifyRegistration();
 
   ExternalDir externalDir = ExternalDir();
 
-  navigate() async {
+  navigate() async 
+  {
     await Future.delayed(Duration(seconds: 3), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       cid = prefs.getString("company_id");
       os = prefs.getString("os");
+      // fp = prefs.getString("fp");
       userType = prefs.getString("user_type");
       st_uname = prefs.getString("st_username");
       versof = prefs.getString("versof");
@@ -63,14 +66,16 @@ class _SplashScreenState extends State<SplashScreen>
 
         print(Provider.of<Controller>(context, listen: false).menu_index);
       }
-      print("versof----$versof");
-      if (versof != "0") {
-        Navigator.push(
-            context,
-            PageRouteBuilder(
-                opaque: false, // set to false
-                pageBuilder: (_, __, ___) {
-                  if (cid != null) {
+      print("versof----%-${versof.runtimeType}");
+      // if (versof.toString() != "0") {
+      Navigator.push(
+          context,
+          PageRouteBuilder(
+              opaque: false, // set to false
+              pageBuilder: (_, __, ___) {
+                if (cid != null) {
+                  if (versof.toString() != "0") {
+                    print("CID:$cid \n FP :$fp");
                     if (continueClicked != null && continueClicked!) {
                       print("continueClicked.............$continueClicked");
                       if (st_uname != null &&
@@ -78,14 +83,10 @@ class _SplashScreenState extends State<SplashScreen>
                           staffLog != null &&
                           staffLog!) {
                         return Dashboard();
-                      } 
-                      else 
-                      {
+                      } else {
                         return StaffLogin();
                       }
-                    } 
-                    else 
-                    {
+                    } else {
                       if (os != null && os!.isNotEmpty) {
                         Provider.of<Controller>(context, listen: false)
                             .getCompanyData(context);
@@ -99,14 +100,77 @@ class _SplashScreenState extends State<SplashScreen>
                       }
                     }
                   } else {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Alert .!'),
+                          content: Text(
+                            "User Not Exist..! Register again",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                                // Within the `FirstRoute` widget
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => RegistrationScreen()),
+                                );
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );});
+                     print("not valid user");
                     return RegistrationScreen();
+                   
                   }
-                }));
-      }
+                } else {
+                  return RegistrationScreen();
+                }
+              }));
+      // }
+      // else
+      // {
+      //   showDialog(
+      //     barrierDismissible: false,
+      //     context: context,
+      //     builder: (context) {
+      //       return AlertDialog(
+      //         title: Text('Alert .!'),
+      //         content: Text(
+      //           "User Not Exist",
+      //           style: TextStyle(fontSize: 16),
+      //         ),
+      //         // actions: [
+      //         //   TextButton(
+      //         //     onPressed: () {
+      //         //       Navigator.of(context).pop(true);
+      //         //       // Within the `FirstRoute` widget
+      //         //       Navigator.push(
+      //         //         context,
+      //         //         MaterialPageRoute(builder: (context) => gotoPage),
+      //         //       );
+      //         //     },
+      //         //     child: Text('Try Again'),
+      //         //   ),
+      //         // ],
+      //       );
+      //     },
+      //   );
+      //   print("not valid user");
+      // }
     });
   }
 
-  shared() async {
+  shared() async 
+  {
     var status = await Permission.storage.status;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     fp = prefs.getString("fp");
@@ -120,12 +184,15 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   @override
-  void initState() {
+  void initState()
+  {
     // TODO: implement initState
     super.initState();
+
     Provider.of<Controller>(context, listen: false).fetchMenusFromMenuTable();
     Provider.of<Controller>(context, listen: false)
         .verifyRegistration(context, "splash");
+  
     shared();
     navigate();
   }

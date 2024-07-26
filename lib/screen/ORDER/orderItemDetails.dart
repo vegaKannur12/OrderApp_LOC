@@ -63,9 +63,9 @@ class OrderItemDetails {
                                 Text(
                                   item,
                                   style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
-                                      color: P_Settings.wavecolor),
+                                      color: P_Settings.wavecolor,overflow: TextOverflow.ellipsis),
                                 ),
                                 Text("-"),
                                 Text(
@@ -342,7 +342,7 @@ class OrderItemDetails {
                           ]),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.all(5.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -369,7 +369,7 @@ class OrderItemDetails {
 
                                         Navigator.pop(context);
                                       },
-                                      child: Text("Apply")))
+                                      child: Text("Apply",style: TextStyle(color: Colors.white),)))
                             ],
                           ),
                         ),

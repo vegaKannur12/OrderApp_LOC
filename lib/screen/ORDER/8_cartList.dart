@@ -315,7 +315,7 @@ class _CartListState extends State<CartList> {
     return Consumer<Controller>(
       builder: (context, value, child) {
         return Container(
-          height: size.height * 0.17,
+          height: size.height * 0.20,
           child: Padding(
             padding:
                 const EdgeInsets.only(left: 2, right: 2, top: 8, bottom: 8),
@@ -635,93 +635,7 @@ class _CartListState extends State<CartList> {
                                         SizedBox(
                                           width: size.width * 0.3,
                                         ),
-                                        Flexible(
-                                          child: IconButton(
-                                            onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (ctx) => AlertDialog(
-                                                  content: Text(
-                                                      "Do you want to delete ($code) ???"),
-                                                  actions: <Widget>[
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        ElevatedButton(
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                                  backgroundColor:
-                                                                      P_Settings
-                                                                          .wavecolor),
-                                                          onPressed: () async {
-                                                            Provider.of<Controller>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .deleteFromOrderBagTable(
-                                                                    cartrowno,
-                                                                    widget
-                                                                        .custmerId,
-                                                                    index);
-                                                            // Provider.of<Controller>(
-                                                            //         context,
-                                                            //         listen:
-                                                            //             false)
-                                                            //     .getProductList(
-                                                            //         widget
-                                                            //             .custmerId);
-                                                            Provider.of<Controller>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .calculateorderTotal(
-                                                                    widget.os,
-                                                                    widget
-                                                                        .custmerId);
-                                                            Provider.of<Controller>(
-                                                                    context,
-                                                                    listen:
-                                                                        false)
-                                                                .countFromTable(
-                                                              "orderBagTable",
-                                                              widget.os,
-                                                              widget.custmerId,
-                                                            );
-                                                            Navigator.of(ctx)
-                                                                .pop();
-                                                          },
-                                                          child: Text("Ok"),
-                                                        ),
-                                                        SizedBox(
-                                                          width:
-                                                              size.width * 0.01,
-                                                        ),
-                                                        ElevatedButton(
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                                  backgroundColor:
-                                                                      P_Settings
-                                                                          .wavecolor),
-                                                          onPressed: () {
-                                                            Navigator.of(ctx)
-                                                                .pop();
-                                                          },
-                                                          child: Text("Cancel"),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                            icon: Icon(
-                                              Icons.delete,
-                                              size: 17,
-                                            ),
-                                            color: P_Settings.extracolor,
-                                          ),
-                                        ),
+                                        Flexible(child: SizedBox()),
                                       ],
                                     ),
                                   ),
@@ -763,20 +677,100 @@ class _CartListState extends State<CartList> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Total price : ",
-                            style: TextStyle(fontSize: 13),
-                          ),
-                          Flexible(
-                            child: Text(
-                              "\u{20B9}${double.parse(totalamount).toStringAsFixed(2)}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: P_Settings.extracolor),
+                          IconButton(
+                            onPressed: () {
+                              print("object");
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  content:
+                                      Text("Do you want to delete ($code) ???"),
+                                  actions: <Widget>[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  P_Settings.wavecolor),
+                                          onPressed: () async {
+                                            Provider.of<Controller>(context,
+                                                    listen: false)
+                                                .deleteFromOrderBagTable(
+                                                    cartrowno,
+                                                    widget.custmerId,
+                                                    index);
+                                            // Provider.of<Controller>(
+                                            //         context,
+                                            //         listen:
+                                            //             false)
+                                            //     .getProductList(
+                                            //         widget
+                                            //             .custmerId);
+                                            Provider.of<Controller>(context,
+                                                    listen: false)
+                                                .calculateorderTotal(widget.os,
+                                                    widget.custmerId);
+                                            Provider.of<Controller>(context,
+                                                    listen: false)
+                                                .countFromTable(
+                                              "orderBagTable",
+                                              widget.os,
+                                              widget.custmerId,
+                                            );
+                                            Navigator.of(ctx).pop();
+                                          },
+                                          child: Text(
+                                            "Ok",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: size.width * 0.01,
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  P_Settings.wavecolor),
+                                          onPressed: () {
+                                            Navigator.of(ctx).pop();
+                                          },
+                                          child: Text(
+                                            "Cancel",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              size: 20,
                             ),
+                            color: P_Settings.extracolor,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Total price : ",
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              Text(
+                                "\u{20B9}${double.parse(totalamount).toStringAsFixed(2)}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: P_Settings.extracolor),
+                              ),
+                            ],
                           ),
                         ],
                       ),

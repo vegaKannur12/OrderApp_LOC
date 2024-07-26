@@ -381,7 +381,8 @@ class _ReturnItemState extends State<ReturnItem> {
                                                           listen: false)
                                                       .salefilteredeValue!,
                                                   "return",
-                                                  value.productName,context)
+                                                  value.productName,
+                                                  context)
                                           : Provider.of<Controller>(context,
                                                   listen: false)
                                               .searchProcess(
@@ -389,7 +390,8 @@ class _ReturnItemState extends State<ReturnItem> {
                                                   widget.os,
                                                   "",
                                                   "return",
-                                                  value.productName,context);
+                                                  value.productName,
+                                                  context);
                                     }),
                                 IconButton(
                                     icon: Icon(
@@ -548,7 +550,8 @@ class _ReturnItemState extends State<ReturnItem> {
                                                                       0.06,
                                                               child: value.qty[index].text ==
                                                                           "0" ||
-                                                                      value.qty[index].text ==
+                                                                      value.qty[index]
+                                                                              .text ==
                                                                           null
                                                                   ? Container()
                                                                   : Text(
@@ -571,7 +574,7 @@ class _ReturnItemState extends State<ReturnItem> {
                                                                       // duration:
                                                                       //     Duration(
                                                                       //         milliseconds: 2000)
-                                                                              ),
+                                                                    ),
                                                             ),
                                                           ],
                                                         ),
@@ -944,7 +947,8 @@ class _ReturnItemState extends State<ReturnItem> {
                                                                       0.06,
                                                               child: value.qty[index].text ==
                                                                           "0" ||
-                                                                      value.qty[index].text ==
+                                                                      value.qty[index]
+                                                                              .text ==
                                                                           null
                                                                   ? Container()
                                                                   : Text(
@@ -967,7 +971,7 @@ class _ReturnItemState extends State<ReturnItem> {
                                                                       // duration:
                                                                       //     Duration(
                                                                       //         milliseconds: 2000)
-                                                                              ),
+                                                                    ),
                                                             ),
                                                           ],
                                                         ),

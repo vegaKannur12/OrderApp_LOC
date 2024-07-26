@@ -7,7 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ExternalDir {
   String? tempFp;
   List<FileSystemEntity> _folders = [];
-  fileRead() async {
+  
+  fileRead() async 
+  {
     String path;
     Directory? extDir = await getExternalStorageDirectory();
     String dirPath = '${extDir!.path}/VgFp/';
@@ -45,9 +47,12 @@ class ExternalDir {
     print("file...$file");
     String filpath = '$dirPath/fpCode.txt';
 
-    if (await File(filpath).exists()) {
+    if (await File(filpath).exists()) 
+    {
       print("file exists");
-    } else {
+    } 
+    else 
+    {
       await file.writeAsString(fp);
     }
   }

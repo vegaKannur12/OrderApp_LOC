@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marsproducts/db_helper.dart';
 import 'package:marsproducts/screen/ORDER/1_companyRegistrationScreen.dart';
 
 class Unreg {
@@ -6,7 +7,9 @@ class Unreg {
     // set up the button
     Widget okButton = TextButton(
       child: Text("Ok"),
-      onPressed: () {
+      onPressed: () async {
+
+      //  await OrderAppDB.instance.deleteAllTables();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => RegistrationScreen()));
       },

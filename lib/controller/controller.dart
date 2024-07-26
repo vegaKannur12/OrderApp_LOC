@@ -571,7 +571,7 @@ class Controller extends ChangeNotifier {
       print("listrrr----$list");
       if (value == true) {
         try {
-          Uri url = Uri.parse(" ");
+          Uri url = Uri.parse("https://trafiqerp.in/order/fj/verify_registration.php");
           Map body = {
             'json_result': jsonen,
           };
@@ -584,33 +584,34 @@ class Controller extends ChangeNotifier {
 
           print("verify--$map");
           VerifyRegistration verRegModel = VerifyRegistration.fromJson(map);
-          versof = verRegModel.sof;
-          vermsg = verRegModel.error;
+          versof = verRegModel.sof.toString();
+          vermsg = verRegModel.error.toString();
           print("vermsg----$vermsg");
-
+          prefs.setString("versof", versof!);
+          prefs.setString("vermsg", vermsg!);
           // /////////////////////////////////////////////////////
           print("cid----fp-----$compny_code---$fp");
           if (fp != null && compny_code != null) {
             print("entereddddsd");
-            // prefs.setString("versof", versof!);
-            // prefs.setString("vermsg", vermsg!);
-            print("versofbhg----${vermsg}");
+          
+            print("versof----${versof}");
             getCompanyData(context);
-            if (versof == "0") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CompanyDetails(
-                          type: "",
-                          msg: vermsg,
-                          br_length: br_length,
-                        )),
-              );
-            } else {
-              if (type == "splash") {
-                getSettings(context, cid!, "");
-              }
-            }
+            // if (versof == "0") {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => CompanyDetails(
+            //               type: "",
+            //               msg: vermsg,
+            //               br_length: br_length,
+            //             )),
+            //   );
+            // } else {
+            //   if (type == "splash") {
+            //     getSettings(context, cid!, "");
+            //   }
+            // }
+            return verRegModel;
           }
 
           notifyListeners();
@@ -4788,11 +4789,14 @@ class Controller extends ChangeNotifier {
   /////////////////////////////////UPDATION BY SREYA MAY 2024///////////////////
 
 /////////////...........tO mARK staff location.........////////////
-  marklocation(BuildContext context, String custid, String type) async {
+ Future<int> marklocation(BuildContext context, String custid, String type) async {
     int y = 0; // type =3 =>no order ,1 =>order,2 => collection
     loma = Text("");
     notifyListeners();
     //cust_lat,cust_longi
+    // var res1 = await OrderAppDB.instance.select_Lati_Longi(custid);
+    //   if (res1[0]['la'].toString().isNotEmpty &&
+    //       res1[0]['lo'].toString().isNotEmpty) {
     try {
       lomaLoad = true;
       notifyListeners();
@@ -4803,6 +4807,7 @@ class Controller extends ChangeNotifier {
       String? com = prefs.getString("company_id");
       // prefs.setString("company_id", company_code);
       print("cid , sid====$cid,$sid");
+       
       var result = await OrderAppDB.instance
           .selectMarkLocDateTable(sid.toString(), custid.toString());
       if (result.length > 0) {
@@ -4969,7 +4974,12 @@ class Controller extends ChangeNotifier {
           snackbar.showSnackbar(context, "Location Already Marked.!", "");
         }
       }
-    } catch (e) {}
+      return 0;  // Proceed
+    } catch (e) 
+    {
+      return 3;  // internal error
+    }
+  
   }
 
   /////////////...........Upload marked location when internet available.........////////////

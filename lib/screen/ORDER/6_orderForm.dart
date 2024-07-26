@@ -714,7 +714,10 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                                                     textColor: P_Settings.wavecolor,
                                                                                     title: Text(
                                                                                       "${values.custmerDetails[index]['hname']}",
-                                                                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                                                                      style: const TextStyle(
+                                                                                        fontSize: 13,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
                                                                                     ),
 
                                                                                     // onTap: (() {
@@ -1587,7 +1590,15 @@ class _OrderFormState extends State<OrderForm> with TickerProviderStateMixin {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.green),
+                                                    color:
+                                                        Provider.of<Controller>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .cust_lat
+                                                                .isNotEmpty 
+                                                            ? Colors.green
+                                                            : Colors.red),
                                               ),
                                             ],
                                           ),

@@ -78,6 +78,16 @@ class _MainDashboardState extends State<MainDashboard> {
     // Provider.of<Controller>(context, listen: false).todayOrder(s[0], context);
   }
 
+  prov() {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return; // Ensure the widget is still mounted
+      Provider.of<Controller>(context, listen: false).sortDistance();
+      if (!mounted) return;
+      Provider.of<Controller>(context, listen: false)
+          .selectSettings("set_code in ('DEFAULT_CUST_CODE')");
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -86,11 +96,7 @@ class _MainDashboardState extends State<MainDashboard> {
     // initPlatformState();
     print("init");
     sharedPref();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      Provider.of<Controller>(context, listen: false).sortDistance();
-      Provider.of<Controller>(context, listen: false)
-          .selectSettings("set_code in ('DEFAULT_CUST_CODE') ");
-    });
+    prov();
     // String? gen_area = Provider.of<Controller>(context, listen: false).areaId;
     // print("gen area----$gen_area");
     // if (gen_area != null) {
@@ -166,7 +172,7 @@ class _MainDashboardState extends State<MainDashboard> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8),
                                     child: Text(
-                                      "${value.cname}",
+                                      value.cname.toString(),
                                       style: GoogleFonts.aBeeZee(
                                           textStyle: Theme.of(context)
                                               .textTheme
@@ -227,7 +233,10 @@ class _MainDashboardState extends State<MainDashboard> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "${widget.curAdr}",
+                              widget.curAdr != "null" &&
+                                      widget.curAdr.toString().isNotEmpty
+                                  ? widget.curAdr.toString()
+                                  : "",
                               style: GoogleFonts.aBeeZee(
                                   textStyle:
                                       Theme.of(context).textTheme.bodyLarge,
@@ -325,54 +334,54 @@ class _MainDashboardState extends State<MainDashboard> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 4.0, left: 8, right: 8),
-                          child: Card(
-                            color: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              side: BorderSide(
-                                color: Color.fromARGB(255, 192, 191, 191),
-                                width: 1.0,
-                              ),
-                            ),
-                            // color: Color.fromARGB(255, 250, 248, 248),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                trailing: Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Color.fromARGB(255, 4, 93, 167),
-                                ),
-                                leading: CircleAvatar(
-                                  // backgroundColor: Colors.,
-                                  backgroundImage: AssetImage(
-                                    "asset/sales.png",
-                                  ),
-                                ),
-                                title: Text(
-                                  "SALES ENTRY",
-                                  style: GoogleFonts.oswald(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14),
-                                ),
-                                onTap: () {
-                                  Provider.of<Controller>(context,
-                                          listen: false)
-                                      .clearLOMarkText();
-                                  value.balance = null;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              OrderForm("", "sales")));
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       top: 4.0, left: 8, right: 8),
+                        //   child: Card(
+                        //     color: Colors.white,
+                        //     elevation: 0,
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(15.0),
+                        //       side: BorderSide(
+                        //         color: Color.fromARGB(255, 192, 191, 191),
+                        //         width: 1.0,
+                        //       ),
+                        //     ),
+                        //     // color: Color.fromARGB(255, 250, 248, 248),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(8.0),
+                        //       child: ListTile(
+                        //         trailing: Icon(
+                        //           Icons.arrow_forward_ios_rounded,
+                        //           color: Color.fromARGB(255, 4, 93, 167),
+                        //         ),
+                        //         leading: CircleAvatar(
+                        //           // backgroundColor: Colors.,
+                        //           backgroundImage: AssetImage(
+                        //             "asset/sales.png",
+                        //           ),
+                        //         ),
+                        //         title: Text(
+                        //           "SALES ENTRY",
+                        //           style: GoogleFonts.oswald(
+                        //               fontWeight: FontWeight.w600,
+                        //               fontSize: 14),
+                        //         ),
+                        //         onTap: () {
+                        //           Provider.of<Controller>(context,
+                        //                   listen: false)
+                        //               .clearLOMarkText();
+                        //           value.balance = null;
+                        //           Navigator.push(
+                        //               context,
+                        //               MaterialPageRoute(
+                        //                   builder: (context) =>
+                        //                       OrderForm("", "sales")));
+                        //         },
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         // Padding(
                         //   padding: const EdgeInsets.only(
                         //       top: 4.0, left: 8, right: 8),
@@ -468,7 +477,6 @@ class _MainDashboardState extends State<MainDashboard> {
                             ),
                           ),
                         ),
-
                         // Padding(
                         //   padding: const EdgeInsets.all(8.0),
                         //   child: Row(
@@ -476,21 +484,23 @@ class _MainDashboardState extends State<MainDashboard> {
                         //     children: [
                         //       Text("Todays Count",
                         //           style: GoogleFonts.oswald(
-                        //               textStyle:
-                        //                   Theme.of(context).textTheme.displayLarge,
+                        //               textStyle: Theme.of(context)
+                        //                   .textTheme
+                        //                   .displayLarge,
                         //               fontSize: 20,
                         //               fontWeight: FontWeight.bold,
                         //               color: Colors.grey[700])),
                         //       Text(" -  ${s[0]}",
                         //           style: GoogleFonts.oswald(
-                        //               textStyle:
-                        //                   Theme.of(context).textTheme.bodyMedium,
+                        //               textStyle: Theme.of(context)
+                        //                   .textTheme
+                        //                   .bodyMedium,
                         //               fontSize: 16,
                         //               color: P_Settings.wavecolor))
                         //     ],
                         //   ),
                         // ),
-                        // SizedBox(height: size.height*01,),
+                        // // SizedBox(height: size.height*01,),
                         // Row(
                         //   children: [
                         //     Padding(
@@ -536,9 +546,9 @@ class _MainDashboardState extends State<MainDashboard> {
                         //     ),
                         //   ],
                         // ),
-                        // SizedBox(
-                        //   height: 12,
-                        // ),
+                        SizedBox(
+                          height: 12,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -691,36 +701,37 @@ class _MainDashboardState extends State<MainDashboard> {
                       ElevatedButton(
                           onPressed: () async {
                             if (selected != null) {
-                              Provider.of<Controller>(context, listen: false)
-                                  .areaId = selected;
-                              Provider.of<Controller>(context, listen: false)
-                                  .areaSelection(selected!);
-                              Provider.of<Controller>(context, listen: false)
-                                  .dashboardSummery(
-                                      sid!, s[0], selected!, context);
-                              String? genArea = Provider.of<Controller>(context,
-                                      listen: false)
-                                  .areaidFrompopup;
+                              final controller = Provider.of<Controller>(
+                                  context,
+                                  listen: false);
+                              controller.areaId = selected;
+                              await controller.areaSelection(selected!);
+                              await controller.dashboardSummery(
+                                  sid!, s[0], selected!, context);
+                              String? genArea =
+                                  await controller.areaidFrompopup;
                               if (genArea != null) {
                                 gen_condition =
                                     " and accountHeadsTable.area_id=$genArea";
                               } else {
                                 gen_condition = " ";
                               }
-                              Provider.of<Controller>(context, listen: false)
-                                  .getCustomer(genArea!);
+                              await controller.getCustomer(genArea!);
                               // Provider.of<Controller>(context, listen: false)
                               //     .todayOrder(s[0], gen_condition!);
-                              Provider.of<Controller>(context, listen: false)
-                                  .todayCollection(s[0], gen_condition!);
-                              Provider.of<Controller>(context, listen: false)
-                                  .todaySales(s[0], gen_condition!, "");
+                              await controller.todayCollection(
+                                  s[0], gen_condition!);
+                              await controller.todaySales(
+                                  s[0], gen_condition!, "");
                               // Provider.of<Controller>(context, listen: false)
                               //     .selectReportFromOrder(
                               //         context, sid!, s[0], "");
+                              // });
                             }
 
                             Navigator.pop(context);
+
+                            // Navigator.pop(context);
                           },
                           child: const Text("save"))
                     ],

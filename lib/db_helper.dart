@@ -3423,4 +3423,19 @@ class OrderAppDB {
     print("Mark Location update responsee----$id---$res");
     return res;
   }
+  //To delete all tables
+  Future<void> deleteAllTables() async {
+    final db = await instance.database;
+
+    // Get the list of all tables
+    final tables = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
+    
+    for (var table in tables) {
+      var tableName = table['name'] as String;
+      if (tableName != 'sqlite_sequence') { // Avoid deleting the SQLite metadata table
+        await db.execute('DROP TABLE IF EXISTS $tableName');
+        print("deleted $tableName");
+      }
+    }
+}
 }
